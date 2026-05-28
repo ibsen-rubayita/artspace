@@ -72,15 +72,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "ArtSpace — A curated community for artists, studios & collectors" },
       { name: "description", content: "ArtSpace connects contemporary artists, studios, and collectors. Explore the gallery, discover artists, and hire studio space." },
+      { name: "author", content: "ArtSpace" },
       { property: "og:title", content: "ArtSpace — A curated community for artists, studios & collectors" },
       { property: "og:description", content: "ArtSpace connects contemporary artists, studios, and collectors. Explore the gallery, discover artists, and hire studio space." },
       { property: "og:type", content: "website" },
@@ -96,6 +90,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
     ],
   }),
+  shellComponent: RootShell,
+  component: RootComponent,
+  notFoundComponent: NotFoundComponent,
+  errorComponent: ErrorComponent,
+});
   errorComponent: ErrorComponent,
 });
 
