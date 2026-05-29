@@ -1,7 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowRight, Play, Sparkles, Briefcase, Palette, Building2 } from "lucide-react";
+import { useRef } from "react";
+import { ArrowRight, Play, Sparkles, Briefcase, Palette, Building2, ChevronLeft, ChevronRight, Heart, Eye } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import heroImg from "@/assets/hero-showcase.jpg";
+import artFigure from "@/assets/gallery-figure.jpg";
+import artCollage from "@/assets/gallery-collage.jpg";
+import artBronze from "@/assets/gallery-bronze.jpg";
+import artDoorway from "@/assets/gallery-doorway.jpg";
+import artMonolith from "@/assets/work-monolith.jpg";
+import artPlains from "@/assets/work-plains.jpg";
+import artQuietude from "@/assets/work-quietude.jpg";
+import artHero from "@/assets/hero-artwork.jpg";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
