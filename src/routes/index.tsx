@@ -1,7 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useRef } from "react";
-import { ArrowRight, Play, Sparkles, Briefcase, Palette, Building2, ChevronLeft, ChevronRight, Heart, Eye } from "lucide-react";
+import { ArrowRight, Play, Sparkles, Briefcase, Palette, Building2 } from "lucide-react";
 import { Header } from "@/components/site/Header";
+import { Footer } from "@/components/site/Footer";
+import { ScrollToTop } from "@/components/site/ScrollToTop";
+import { HorizontalRail, type RailItem } from "@/components/site/HorizontalRail";
+
 import heroImg from "@/assets/hero-showcase.jpg";
 import artFigure from "@/assets/gallery-figure.jpg";
 import artCollage from "@/assets/gallery-collage.jpg";
@@ -11,12 +14,17 @@ import artMonolith from "@/assets/work-monolith.jpg";
 import artPlains from "@/assets/work-plains.jpg";
 import artQuietude from "@/assets/work-quietude.jpg";
 import artHero from "@/assets/hero-artwork.jpg";
+import art1 from "@/assets/art-1.jpg";
+import art2 from "@/assets/art-2.jpg";
+import art5 from "@/assets/art-5.jpg";
+import art7 from "@/assets/art-7.jpg";
+import art8 from "@/assets/art-8.jpg";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const RECENT_ARTWORKS = [
+const RECENT_ARTWORKS: RailItem[] = [
   { img: artFigure, title: "Figure in Ochre", artist: "L. Marin", likes: "2.4k", views: "18.2k", tag: "Painting" },
   { img: artCollage, title: "Paper Memory", artist: "K. Aoki", likes: "1.8k", views: "12.6k", tag: "Mixed Media" },
   { img: artBronze, title: "Untitled (Bronze 04)", artist: "R. Okafor", likes: "3.1k", views: "22.9k", tag: "Sculpture" },
@@ -27,51 +35,27 @@ const RECENT_ARTWORKS = [
   { img: artHero, title: "Inner Light", artist: "A. Petrov", likes: "3.4k", views: "27.0k", tag: "Concept" },
 ];
 
-function HorizontalRail({ title, subtitle, items }: { title: string; subtitle: string; items: typeof RECENT_ARTWORKS }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const scroll = (dir: number) => {
-    ref.current?.scrollBy({ left: dir * 660, behavior: "smooth" });
-  };
-  return (
-    <section className="mx-auto max-w-[1400px] px-4 lg:px-6 pb-16">
-      <div className="flex items-end justify-between gap-4 mb-6">
-        <div>
-          <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight">{title}</h2>
-          <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">{subtitle}</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button onClick={() => scroll(-1)} aria-label="Scroll left" className="btn btn-ghost h-9 w-9 p-0"><ChevronLeft className="h-4 w-4" /></button>
-          <button onClick={() => scroll(1)} aria-label="Scroll right" className="btn btn-ghost h-9 w-9 p-0"><ChevronRight className="h-4 w-4" /></button>
-        </div>
-      </div>
+const TRENDING: RailItem[] = [
+  { img: art2, title: "Floating Quiet", artist: "S. Vance", likes: "6.2k", views: "48.1k", tag: "Concept" },
+  { img: art7, title: "Halftone Bloom", artist: "J. Disingana", likes: "5.1k", views: "39.0k", tag: "Illustration" },
+  { img: art5, title: "Mech 07", artist: "K. Mori", likes: "4.8k", views: "33.4k", tag: "3D" },
+  { img: art1, title: "Atlantic Blue", artist: "S. Vance", likes: "3.6k", views: "27.7k", tag: "Painting" },
+  { img: art8, title: "The Fisherman", artist: "A. Petrov", likes: "3.4k", views: "27.0k", tag: "Portrait" },
+  { img: artCollage, title: "Paper Memory", artist: "K. Aoki", likes: "2.9k", views: "21.2k", tag: "Mixed" },
+  { img: artBronze, title: "Bronze 04", artist: "R. Okafor", likes: "2.4k", views: "18.9k", tag: "Sculpture" },
+  { img: artDoorway, title: "Doorway, Lisbon", artist: "M. Costa", likes: "1.9k", views: "14.5k", tag: "Photo" },
+];
 
-      <div
-        ref={ref}
-        className="rail flex gap-5 overflow-x-auto pb-4 -mx-4 px-4 lg:-mx-6 lg:px-6 snap-x snap-mandatory scroll-smooth"
-      >
-        {items.map((a, i) => (
-          <article
-            key={`${title}-${i}`}
-            className="rail-card group snap-start shrink-0"
-          >
-            <div className="rail-card-media">
-              <img src={a.img} alt={a.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.06]" />
-              <span className="absolute top-3 left-3 badge bg-[var(--color-surface)]/85 backdrop-blur-md text-[var(--color-foreground)] border border-[var(--color-border)]">{a.tag}</span>
-              <div className="absolute inset-x-0 bottom-0 p-3 flex items-center gap-3 text-[11px] text-white opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 bg-gradient-to-t from-black/70 to-transparent">
-                <span className="inline-flex items-center gap-1"><Heart className="h-3 w-3" /> {a.likes}</span>
-                <span className="inline-flex items-center gap-1"><Eye className="h-3 w-3" /> {a.views}</span>
-              </div>
-            </div>
-            <div className="px-1 pt-3 pb-1">
-              <h3 className="text-sm font-semibold truncate">{a.title}</h3>
-              <p className="text-xs text-[var(--color-muted-foreground)] mt-0.5">by {a.artist}</p>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
+const POPULAR: RailItem[] = [
+  { img: artQuietude, title: "Quietude", artist: "J. Disingana", likes: "7.3k", views: "61.0k", tag: "Digital" },
+  { img: artMonolith, title: "Monolith", artist: "S. Vance", likes: "5.9k", views: "44.1k", tag: "Painting" },
+  { img: art7, title: "Halftone Bloom", artist: "J. Disingana", likes: "5.1k", views: "39.0k", tag: "Illustration" },
+  { img: artFigure, title: "Figure in Ochre", artist: "L. Marin", likes: "4.7k", views: "32.8k", tag: "Painting" },
+  { img: art8, title: "The Fisherman", artist: "A. Petrov", likes: "4.5k", views: "31.0k", tag: "Portrait" },
+  { img: art2, title: "Floating Quiet", artist: "S. Vance", likes: "4.0k", views: "29.2k", tag: "Concept" },
+  { img: artPlains, title: "Plains at Dusk", artist: "E. Lindqvist", likes: "3.2k", views: "23.4k", tag: "Painting" },
+  { img: art5, title: "Mech 07", artist: "K. Mori", likes: "2.7k", views: "20.5k", tag: "3D" },
+];
 
 function HomePage() {
   return (
@@ -81,7 +65,6 @@ function HomePage() {
       {/* HERO */}
       <section className="relative overflow-hidden">
         <div className="mx-auto max-w-[1400px] px-4 lg:px-6 pt-10 lg:pt-16 pb-16 lg:pb-24 grid lg:grid-cols-12 gap-10 items-center">
-          {/* Left */}
           <div className="lg:col-span-6 animate-fade-up">
             <div className="inline-flex items-center gap-2 text-xs px-3 py-1 rounded-full border" style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}>
               <Sparkles className="h-3.5 w-3.5 text-[var(--color-accent)]" />
@@ -99,13 +82,12 @@ function HomePage() {
             </p>
 
             <div className="mt-7 flex flex-wrap items-center gap-3">
-              <button className="btn btn-cta px-5 py-2.5 text-sm">
+              <a href="/hire" className="btn btn-cta px-5 py-2.5 text-sm">
                 Hire a studio <ArrowRight className="h-4 w-4" />
-              </button>
-              <button className="btn btn-ghost px-5 py-2.5 text-sm">List your studio</button>
+              </a>
+              <a href="/hire" className="btn btn-ghost px-5 py-2.5 text-sm">List your studio</a>
             </div>
 
-            {/* Quick stats */}
             <div className="mt-10 grid grid-cols-3 gap-6 max-w-md">
               {[
                 { k: "1.2K+", v: "Studios" },
@@ -120,12 +102,8 @@ function HomePage() {
             </div>
           </div>
 
-          {/* Right */}
           <div className="lg:col-span-6 animate-fade-up delay-200">
-            <div
-              className="relative rounded-xl overflow-hidden border"
-              style={{ borderColor: "var(--color-border)" }}
-            >
+            <div className="relative rounded-xl overflow-hidden border" style={{ borderColor: "var(--color-border)" }}>
               <img
                 src={heroImg}
                 alt="Featured concept artwork showcase"
@@ -133,16 +111,11 @@ function HomePage() {
                 height={1280}
                 className="w-full h-[420px] lg:h-[520px] object-cover"
               />
-              {/* play overlay */}
-              <button
-                aria-label="Play showcase reel"
-                className="absolute inset-0 grid place-items-center group"
-              >
+              <button aria-label="Play showcase reel" className="absolute inset-0 grid place-items-center group">
                 <span className="h-14 w-14 rounded-full grid place-items-center bg-white/15 backdrop-blur-md border border-white/30 group-hover:scale-110 transition-transform">
                   <Play className="h-5 w-5 text-white fill-white" />
                 </span>
               </button>
-              {/* attribution badge */}
               <div className="absolute left-4 bottom-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/55 backdrop-blur-md border border-white/15">
                 <span className="h-6 w-6 rounded-full bg-gradient-to-br from-[var(--color-accent)] to-purple-500" />
                 <span className="text-xs text-white/90">Artwork by <span className="font-medium">Jorce Disingana</span></span>
@@ -151,7 +124,6 @@ function HomePage() {
           </div>
         </div>
 
-        {/* subtle accent glow */}
         <div
           aria-hidden
           className="pointer-events-none absolute -top-32 -right-32 h-96 w-96 rounded-full opacity-25 blur-3xl"
@@ -159,16 +131,17 @@ function HomePage() {
         />
       </section>
 
-      {/* QUICK ACCESS CARDS */}
+      {/* QUICK ACCESS */}
       <section className="mx-auto max-w-[1400px] px-4 lg:px-6 pb-20">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
-            { icon: Palette, title: "Explore the Gallery", desc: "Hand-picked work from artists worldwide.", cta: "Browse gallery" },
-            { icon: Briefcase, title: "Find a Job", desc: "Roles at the studios you admire.", cta: "View listings" },
-            { icon: Building2, title: "Hire a Studio", desc: "Vetted teams ready for production.", cta: "Post a brief" },
+            { icon: Palette, title: "Explore the Gallery", desc: "Hand-picked work from artists worldwide.", cta: "Browse gallery", href: "/explore" },
+            { icon: Briefcase, title: "Find a Job", desc: "Roles at the studios you admire.", cta: "View listings", href: "/jobs" },
+            { icon: Building2, title: "Hire a Studio", desc: "Vetted teams ready for production.", cta: "Post a brief", href: "/hire" },
           ].map((c, i) => (
-            <div
+            <a
               key={c.title}
+              href={c.href}
               className="card-surface p-5 group hover:border-[var(--color-accent)] transition-colors animate-fade-up"
               style={{ animationDelay: `${0.1 + i * 0.1}s` }}
             >
@@ -177,31 +150,20 @@ function HomePage() {
               </div>
               <h3 className="text-base font-semibold">{c.title}</h3>
               <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">{c.desc}</p>
-              <button className="mt-4 inline-flex items-center gap-1.5 text-sm text-[var(--color-accent)] group-hover:gap-2.5 transition-all">
+              <span className="mt-4 inline-flex items-center gap-1.5 text-sm text-[var(--color-accent)] group-hover:gap-2.5 transition-all">
                 {c.cta} <ArrowRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
+              </span>
+            </a>
           ))}
         </div>
       </section>
 
-      {/* HORIZONTAL RAILS */}
       <HorizontalRail title="Recent Artworks" subtitle="Freshly uploaded from artists across the community." items={RECENT_ARTWORKS} />
-      <HorizontalRail title="Trending Portfolios" subtitle="Most viewed portfolio posts this week." items={[...RECENT_ARTWORKS].reverse()} />
-      <HorizontalRail title="Popular on ArtSpace" subtitle="Loved by collectors and studios." items={RECENT_ARTWORKS.slice(2).concat(RECENT_ARTWORKS.slice(0, 2))} />
+      <HorizontalRail title="Trending Portfolios" subtitle="Most viewed portfolio posts this week." items={TRENDING} />
+      <HorizontalRail title="Popular on ArtSpace" subtitle="Loved by collectors and studios." items={POPULAR} />
 
-
-      {/* FOOTER */}
-      <footer className="border-t" style={{ borderColor: "var(--color-border)" }}>
-        <div className="mx-auto max-w-[1400px] px-4 lg:px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-[var(--color-muted-foreground)]">
-          <div>© {new Date().getFullYear()} ArtSpace. A community for artists, studios & collectors.</div>
-          <div className="flex items-center gap-5">
-            <a href="#" className="hover:text-[var(--color-foreground)]">Terms</a>
-            <a href="#" className="hover:text-[var(--color-foreground)]">Privacy</a>
-            <a href="#" className="hover:text-[var(--color-foreground)]">Contact</a>
-          </div>
-        </div>
-      </footer>
+      <Footer />
+      <ScrollToTop />
     </div>
   );
 }
