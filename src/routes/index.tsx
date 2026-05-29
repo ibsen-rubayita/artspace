@@ -185,6 +185,12 @@ function HomePage() {
         </div>
       </section>
 
+      {/* HORIZONTAL RAILS */}
+      <HorizontalRail title="Recent Artworks" subtitle="Freshly uploaded from artists across the community." items={RECENT_ARTWORKS} />
+      <HorizontalRail title="Trending Portfolios" subtitle="Most viewed portfolio posts this week." items={[...RECENT_ARTWORKS].reverse()} />
+      <HorizontalRail title="Popular on ArtSpace" subtitle="Loved by collectors and studios." items={RECENT_ARTWORKS.slice(2).concat(RECENT_ARTWORKS.slice(0, 2))} />
+
+
       {/* FOOTER */}
       <footer className="border-t" style={{ borderColor: "var(--color-border)" }}>
         <div className="mx-auto max-w-[1400px] px-4 lg:px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-[var(--color-muted-foreground)]">
