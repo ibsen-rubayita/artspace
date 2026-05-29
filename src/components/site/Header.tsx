@@ -12,15 +12,55 @@ import { useEffect, useRef, useState } from "react";
 import { useTheme } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 
-type SubLink = { label: string; badge?: "SALE" | "NEW" };
-type NavItem = { label: string; items: SubLink[] };
+type SubLink = { label: string; to: string; hash?: string; badge?: "SALE" | "NEW" };
+type NavItem = { label: string; to: string; items: SubLink[] };
 
 const NAV: NavItem[] = [
-  { label: "Explore", items: [{ label: "Gallery" }, { label: "Blogs" }, { label: "Magazine" }] },
-  { label: "Learn", items: [{ label: "Learning" }, { label: "Challenges" }, { label: "Schools and Training Centers" }] },
-  { label: "Shop", items: [{ label: "Marketplace", badge: "SALE" }, { label: "Prints", badge: "NEW" }] },
-  { label: "Find a Job", items: [{ label: "Job Listings" }, { label: "Hiring Studios" }, { label: "Save Jobs" }, { label: "Job Resources" }] },
-  { label: "Hire", items: [{ label: "Post a Job" }, { label: "Find an Artist" }, { label: "Find a Studio" }] },
+  {
+    label: "Explore",
+    to: "/explore",
+    items: [
+      { label: "Gallery", to: "/gallery" },
+      { label: "Blogs", to: "/explore", hash: "blogs" },
+      { label: "Magazine", to: "/explore", hash: "magazine" },
+    ],
+  },
+  {
+    label: "Learn",
+    to: "/learn",
+    items: [
+      { label: "Learning", to: "/learn", hash: "learning" },
+      { label: "Challenges", to: "/learn", hash: "challenges" },
+      { label: "Schools and Training Centers", to: "/learn", hash: "schools" },
+    ],
+  },
+  {
+    label: "Shop",
+    to: "/shop",
+    items: [
+      { label: "Marketplace", to: "/shop", hash: "marketplace", badge: "SALE" },
+      { label: "Prints", to: "/shop", hash: "prints", badge: "NEW" },
+    ],
+  },
+  {
+    label: "Find a Job",
+    to: "/jobs",
+    items: [
+      { label: "Job Listings", to: "/jobs", hash: "listings" },
+      { label: "Hiring Studios", to: "/jobs", hash: "studios" },
+      { label: "Saved Jobs", to: "/jobs", hash: "saved" },
+      { label: "Job Resources", to: "/jobs", hash: "resources" },
+    ],
+  },
+  {
+    label: "Hire",
+    to: "/hire",
+    items: [
+      { label: "Post a Job", to: "/hire", hash: "post" },
+      { label: "Find an Artist", to: "/hire", hash: "artists" },
+      { label: "Find a Studio", to: "/hire", hash: "studios" },
+    ],
+  },
 ];
 
 const SEARCH_FILTERS = [
@@ -50,14 +90,8 @@ function Badge({ kind }: { kind: "SALE" | "NEW" }) {
 
 function Logo() {
   return (
-    <a
-      href="/"
-      onClick={(e) => {
-        if (window.location.pathname === "/") {
-          e.preventDefault();
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-      }}
+    <Link
+      to="/"
       className="flex items-center gap-2 select-none"
       aria-label="ArtSpace — home"
     >
@@ -68,7 +102,21 @@ function Logo() {
         <Hexagon className="h-4 w-4 text-white" strokeWidth={2.5} />
       </span>
       <span className="text-[15px] font-semibold tracking-tight">ArtSpace</span>
-    </a>
+    </Link>
+  );
+}
+
+function SubItem({ s, onClick }: { s: SubLink; onClick?: () => void }) {
+  return (
+    <Link
+      to={s.to}
+      hash={s.hash}
+      onClick={onClick}
+      className="flex items-center justify-between px-3 py-2 text-sm hover:bg-[var(--color-surface-2)] transition-colors"
+    >
+      <span>{s.label}</span>
+      {s.badge && <Badge kind={s.badge} />}
+    </Link>
   );
 }
 
@@ -86,28 +134,18 @@ function NavDropdown({ item }: { item: NavItem }) {
 
   return (
     <div className="relative" onMouseEnter={onEnter} onMouseLeave={onLeave}>
-      <button
+      <Link
+        to={item.to}
         className="nav-link inline-flex items-center gap-1 text-sm px-2 py-2"
         data-open={open}
-        aria-expanded={open}
+        activeProps={{ className: "nav-link inline-flex items-center gap-1 text-sm px-2 py-2 !text-[var(--color-accent)] !opacity-100" }}
       >
         {item.label}
         <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", open && "rotate-180")} />
-      </button>
+      </Link>
       {open && (
-        <div
-          className="dropdown-panel animate-dropdown absolute left-0 top-full mt-2 min-w-[220px] py-2 z-50"
-        >
-          {item.items.map((s) => (
-            <a
-              key={s.label}
-              href="#"
-              className="flex items-center justify-between px-3 py-2 text-sm hover:bg-[var(--color-surface-2)] transition-colors"
-            >
-              <span>{s.label}</span>
-              {s.badge && <Badge kind={s.badge} />}
-            </a>
-          ))}
+        <div className="dropdown-panel animate-dropdown absolute left-0 top-full mt-2 min-w-[240px] py-2 z-50">
+          {item.items.map((s) => <SubItem key={s.label} s={s} />)}
         </div>
       )}
     </div>
@@ -131,10 +169,7 @@ function SearchBar() {
   return (
     <div ref={wrapRef} className="relative w-full max-w-[340px]">
       <div
-        className={cn(
-          "flex items-center h-9 rounded-lg border px-3 transition-colors",
-          "bg-[var(--color-surface)]",
-        )}
+        className={cn("flex items-center h-9 rounded-lg border px-3 transition-colors", "bg-[var(--color-surface)]")}
         style={{ borderColor: focused ? "var(--color-accent)" : "var(--color-border)" }}
       >
         <Search className="h-4 w-4 text-[var(--color-muted-foreground)] shrink-0" />
@@ -238,25 +273,21 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
             const isOpen = openItem === item.label;
             return (
               <div key={item.label} className="border-b last:border-b-0" style={{ borderColor: "var(--color-border)" }}>
-                <button
-                  onClick={() => setOpenItem(isOpen ? null : item.label)}
-                  className="w-full flex items-center justify-between px-3 py-3 text-sm font-medium"
-                >
-                  {item.label}
-                  <ChevronDown className={cn("h-4 w-4 transition-transform", isOpen && "rotate-180")} />
-                </button>
+                <div className="w-full flex items-center justify-between pr-2">
+                  <Link to={item.to} onClick={onClose} className="flex-1 px-3 py-3 text-sm font-medium">
+                    {item.label}
+                  </Link>
+                  <button
+                    onClick={() => setOpenItem(isOpen ? null : item.label)}
+                    aria-label="Toggle submenu"
+                    className="h-9 w-9 grid place-items-center"
+                  >
+                    <ChevronDown className={cn("h-4 w-4 transition-transform", isOpen && "rotate-180")} />
+                  </button>
+                </div>
                 {isOpen && (
                   <div className="pb-2 pl-3">
-                    {item.items.map((s) => (
-                      <a
-                        key={s.label}
-                        href="#"
-                        className="flex items-center justify-between px-3 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] rounded-md hover:bg-[var(--color-surface)]"
-                      >
-                        <span>{s.label}</span>
-                        {s.badge && <Badge kind={s.badge} />}
-                      </a>
-                    ))}
+                    {item.items.map((s) => <SubItem key={s.label} s={s} onClick={onClose} />)}
                   </div>
                 )}
               </div>
@@ -293,7 +324,6 @@ export function Header() {
       style={{ borderBottom: "1px solid var(--color-border)" }}
     >
       <div className="mx-auto max-w-[1400px] px-4 lg:px-6 h-14 flex items-center gap-4">
-        {/* Mobile: hamburger left */}
         <button
           onClick={() => setDrawer(true)}
           aria-label="Open menu"
@@ -302,32 +332,25 @@ export function Header() {
           <Menu className="h-5 w-5" />
         </button>
 
-        {/* Mobile: centered logo */}
         <div className="flex-1 flex justify-center lg:hidden">
           <Logo />
         </div>
 
-        {/* Desktop: logo + nav */}
         <div className="hidden lg:flex items-center gap-6">
           <Logo />
           <nav className="flex items-center gap-1">
-            {NAV.map((item) => (
-              <NavDropdown key={item.label} item={item} />
-            ))}
+            {NAV.map((item) => <NavDropdown key={item.label} item={item} />)}
           </nav>
         </div>
 
-        {/* flex spacer */}
         <div className="hidden lg:block flex-1" />
 
-        {/* Desktop right: search + sign-in + theme */}
         <div className="hidden lg:flex items-center gap-3">
           <SearchBar />
           <button className="btn btn-ghost">Sign in</button>
           <ThemeToggle />
         </div>
 
-        {/* Mobile right */}
         <div className="flex items-center gap-2 lg:hidden">
           <button className="btn btn-ghost h-9 px-3 text-xs">Sign in</button>
           <ThemeToggle />
