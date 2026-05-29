@@ -308,6 +308,7 @@ function GalleryPage() {
           </Link>
         </div>
       </footer>
+      <ScrollToTop />
     </div>
   );
 }
