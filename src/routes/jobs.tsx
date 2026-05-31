@@ -1,10 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Briefcase, MapPin, Building2, Bookmark, BookOpen, Search } from "lucide-react";
+import { toast } from "sonner";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ScrollToTop } from "@/components/site/ScrollToTop";
 import { PageHero } from "@/components/site/PageHero";
 import { HorizontalRail, type RailItem } from "@/components/site/HorizontalRail";
+import { useRequireAuth } from "@/hooks/use-require-auth";
+import { useAuth } from "@/hooks/use-auth";
+import { supabase } from "@/integrations/supabase/client";
 
 import jobsTeam from "@/assets/jobs-team.jpg";
 import hireStudio from "@/assets/hire-studio.jpg";
