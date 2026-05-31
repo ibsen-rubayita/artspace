@@ -121,26 +121,29 @@ function HirePage() {
             <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">We'll review and send shortlists in 24–48h.</p>
 
             <div className="mt-5 grid sm:grid-cols-2 gap-3">
-              <input className="h-10 rounded-lg border px-3 text-sm bg-[var(--color-background)]" placeholder="Project title" style={{ borderColor: "var(--color-border)" }} />
-              <select className="h-10 rounded-lg border px-3 text-sm bg-[var(--color-background)]" style={{ borderColor: "var(--color-border)" }}>
-                <option>Discipline</option>
+              <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="h-10 rounded-lg border px-3 text-sm bg-[var(--color-background)]" placeholder="Project title" style={{ borderColor: "var(--color-border)" }} />
+              <select value={form.discipline} onChange={(e) => setForm({ ...form, discipline: e.target.value })} className="h-10 rounded-lg border px-3 text-sm bg-[var(--color-background)]" style={{ borderColor: "var(--color-border)" }}>
                 <option>Concept Art</option>
                 <option>3D / Animation</option>
                 <option>Illustration</option>
                 <option>Photography</option>
                 <option>Sculpture</option>
               </select>
-              <input className="h-10 rounded-lg border px-3 text-sm bg-[var(--color-background)]" placeholder="Budget (USD)" style={{ borderColor: "var(--color-border)" }} />
-              <input className="h-10 rounded-lg border px-3 text-sm bg-[var(--color-background)]" placeholder="Deadline" style={{ borderColor: "var(--color-border)" }} />
+              <input value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })} className="h-10 rounded-lg border px-3 text-sm bg-[var(--color-background)]" placeholder="Budget (USD)" style={{ borderColor: "var(--color-border)" }} />
+              <input value={form.deadline} onChange={(e) => setForm({ ...form, deadline: e.target.value })} className="h-10 rounded-lg border px-3 text-sm bg-[var(--color-background)]" placeholder="Deadline" style={{ borderColor: "var(--color-border)" }} />
             </div>
             <textarea
               rows={4}
+              value={form.message}
+              onChange={(e) => setForm({ ...form, message: e.target.value })}
               placeholder="Describe the brief, references and deliverables…"
               className="mt-3 w-full rounded-lg border p-3 text-sm bg-[var(--color-background)]"
               style={{ borderColor: "var(--color-border)" }}
             />
             <div className="mt-4 flex flex-wrap items-center gap-2">
-              <button className="btn btn-cta px-5 py-2.5 text-sm">Submit brief <ArrowRight className="h-4 w-4" /></button>
+              <button onClick={submit} disabled={busy} className="btn btn-cta px-5 py-2.5 text-sm">
+                {busy ? "Submitting..." : "Submit brief"} <ArrowRight className="h-4 w-4" />
+              </button>
               <button className="btn btn-ghost px-5 py-2.5 text-sm">Save draft</button>
             </div>
           </div>
