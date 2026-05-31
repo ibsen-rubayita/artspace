@@ -186,7 +186,23 @@ function ThemeToggle() {
   );
 }
 
-function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
+function MobileDrawer({
+  open,
+  onClose,
+  onOpenSearch,
+  onSignIn,
+  onSignUp,
+  user,
+  onSignOut,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onOpenSearch: () => void;
+  onSignIn: () => void;
+  onSignUp: () => void;
+  user: ReturnType<typeof useAuth>["user"];
+  onSignOut: () => void;
+}) {
   const [openItem, setOpenItem] = useState<string | null>(null);
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -209,7 +225,7 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
         </div>
 
         <div className="p-4">
-          <SearchBar />
+          <SearchTrigger onOpen={() => { onClose(); onOpenSearch(); }} />
         </div>
 
         <nav className="flex-1 overflow-y-auto px-2 pb-4">
@@ -240,10 +256,58 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
         </nav>
 
         <div className="p-4 border-t flex flex-col gap-2" style={{ borderColor: "var(--color-border)" }}>
-          <button className="btn btn-ghost w-full">Sign in</button>
-          <button className="btn btn-cta w-full">Sign up</button>
+          {user ? (
+            <button onClick={() => { onClose(); onSignOut(); }} className="btn btn-ghost w-full inline-flex items-center justify-center gap-2">
+              <LogOut className="h-4 w-4" /> Sign out
+            </button>
+          ) : (
+            <>
+              <button onClick={() => { onClose(); onSignIn(); }} className="btn btn-ghost w-full">Sign in</button>
+              <button onClick={() => { onClose(); onSignUp(); }} className="btn btn-cta w-full">Sign up</button>
+            </>
+          )}
         </div>
       </aside>
+    </div>
+  );
+}
+
+function UserMenu() {
+  const { user, signOut } = useAuth();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const h = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
+  }, []);
+  if (!user) return null;
+  const initials = (user.user_metadata?.first_name?.[0] ?? user.email?.[0] ?? "A").toUpperCase();
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="h-9 w-9 rounded-full grid place-items-center text-sm font-medium text-white"
+        style={{ background: "linear-gradient(135deg, var(--color-accent), color-mix(in oklab, var(--color-accent) 50%, #000))" }}
+        aria-label="Account menu"
+      >
+        {initials}
+      </button>
+      {open && (
+        <div className="dropdown-panel animate-dropdown absolute right-0 top-full mt-2 min-w-[220px] py-2 z-50">
+          <div className="px-3 py-2 text-xs text-[var(--color-muted-foreground)] truncate">{user.email}</div>
+          <div className="my-1 h-px bg-[var(--color-border)]" />
+          <button className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm hover:bg-[var(--color-surface-2)]">
+            <UserIcon className="h-4 w-4" /> Profile
+          </button>
+          <button
+            onClick={async () => { await signOut(); setOpen(false); toast.success("Signed out"); }}
+            className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm hover:bg-[var(--color-surface-2)]"
+          >
+            <LogOut className="h-4 w-4" /> Sign out
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -251,12 +315,25 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
 export function Header() {
   const [drawer, setDrawer] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const { user, openAuth, signOut } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 4);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, []);
 
   return (
@@ -290,18 +367,42 @@ export function Header() {
         <div className="hidden lg:block flex-1" />
 
         <div className="hidden lg:flex items-center gap-3">
-          <SearchBar />
-          <button className="btn btn-ghost">Sign in</button>
+          <SearchTrigger onOpen={() => setSearchOpen(true)} />
+          {user ? (
+            <UserMenu />
+          ) : (
+            <>
+              <button onClick={() => openAuth("signin")} className="btn btn-ghost">Sign in</button>
+              <button onClick={() => openAuth("signup")} className="btn btn-cta">Sign up</button>
+            </>
+          )}
           <ThemeToggle />
         </div>
 
         <div className="flex items-center gap-2 lg:hidden">
-          <button className="btn btn-ghost h-9 px-3 text-xs">Sign in</button>
+          <button onClick={() => setSearchOpen(true)} aria-label="Search" className="h-9 w-9 grid place-items-center rounded-lg hover:bg-[var(--color-surface)]">
+            <Search className="h-4 w-4" />
+          </button>
+          {user ? (
+            <UserMenu />
+          ) : (
+            <button onClick={() => openAuth("signin")} className="btn btn-ghost h-9 px-3 text-xs">Sign in</button>
+          )}
           <ThemeToggle />
         </div>
       </div>
 
-      <MobileDrawer open={drawer} onClose={() => setDrawer(false)} />
+      <MobileDrawer
+        open={drawer}
+        onClose={() => setDrawer(false)}
+        onOpenSearch={() => setSearchOpen(true)}
+        onSignIn={() => openAuth("signin")}
+        onSignUp={() => openAuth("signup")}
+        user={user}
+        onSignOut={async () => { await signOut(); toast.success("Signed out"); }}
+      />
+
+      <GlobalSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 }
