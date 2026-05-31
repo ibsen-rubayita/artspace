@@ -76,7 +76,7 @@ function GalleryPage() {
       {/* Filter bar */}
       <section className="px-6 md:px-10 max-w-7xl mx-auto py-8 md:py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
         <div className="flex flex-wrap gap-2">
-          {mediums.map((m) => {
+          {FILTERS.map((m) => {
             const active = filter === m;
             return (
               <button
@@ -96,7 +96,7 @@ function GalleryPage() {
           })}
         </div>
         <p className="text-[10.5px] uppercase tracking-[0.25em] text-muted-foreground">
-          Showing <span className="text-ink">{filtered.length.toString().padStart(2, "0")}</span> / {pieces.length.toString().padStart(2, "0")} works
+          Showing <span className="text-ink">{filtered.length.toString().padStart(2, "0")}</span> / {ARTWORKS.length.toString().padStart(2, "0")} works
         </p>
       </section>
 
@@ -107,21 +107,17 @@ function GalleryPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
           {filtered.map((p, i) => (
             <article
-              key={`${p.title}-${i}`}
-              className={[
-                "group cursor-pointer animate-fade-up",
-                p.span ? "lg:col-span-2" : "",
-              ].join(" ")}
+              key={p.id}
+              className="group cursor-pointer animate-fade-up"
               style={{ animationDelay: `${Math.min(i, 6) * 80}ms` }}
             >
-              <div className={`frame relative w-full ${ratioClass[p.ratio]}`}>
+              <div className="frame relative w-full aspect-[4/5]">
                 <img
                   src={p.image}
-                  alt={p.alt}
+                  alt={`${p.title} by ${p.artist}`}
                   loading="lazy"
                   className="w-full h-full object-cover"
                 />
-                {/* hover veil + reveal */}
                 <div className="absolute inset-0 bg-ink/0 group-hover:bg-ink/35 transition-colors duration-500" />
                 <div className="absolute inset-x-0 bottom-0 p-5 md:p-6 translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
                   <span className="inline-flex items-center gap-2 bg-canvas text-ink px-3 py-1.5 text-[10px] uppercase tracking-[0.22em] font-medium">
@@ -145,7 +141,7 @@ function GalleryPage() {
                 <div className="text-right shrink-0">
                   <p className="font-serif text-base text-ink">{p.price}</p>
                   <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                    {p.medium} · {p.year}
+                    {p.category} · {p.year}
                   </p>
                 </div>
               </div>
