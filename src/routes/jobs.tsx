@@ -75,6 +75,22 @@ const RESOURCES: RailItem[] = [
 ];
 
 function JobCard({ job }: { job: Job }) {
+  const requireAuth = useRequireAuth();
+  const { user } = useAuth();
+  const apply = () => requireAuth(async () => {
+    const { error } = await supabase.from("submissions").insert({
+      kind: "job_application",
+      name: user?.user_metadata?.first_name ?? user?.email ?? null,
+      email: user?.email ?? null,
+      subject: `Application: ${job.title} at ${job.studio}`,
+      message: `${user?.email ?? "An applicant"} applied to ${job.title} at ${job.studio}.`,
+      payload: { job, recipient: "ibsenrubayita@gmail.com" },
+      user_id: user?.id ?? null,
+    });
+    if (error) return toast.error(error.message);
+    toast.success(`Application sent to ${job.studio}`);
+  }, "apply for jobs");
+
   return (
     <div className="card-surface p-5 hover:border-[var(--color-accent)] transition-colors flex flex-col gap-3">
       <div className="flex items-start justify-between gap-3">
@@ -114,7 +130,7 @@ function JobCard({ job }: { job: Job }) {
         ))}
       </div>
       <div className="flex items-center gap-2 mt-1">
-        <button className="btn btn-cta px-4 py-2 text-sm">Apply</button>
+        <button onClick={apply} className="btn btn-cta px-4 py-2 text-sm">Apply</button>
         <button className="btn btn-ghost h-9 w-9 p-0" aria-label="Save job"><Bookmark className="h-4 w-4" /></button>
       </div>
     </div>
