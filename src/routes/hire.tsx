@@ -59,8 +59,8 @@ function HirePage() {
       <PageHero
         eyebrow="Hire on ArtSpace"
         icon={UserPlus}
-        title={<>Hire the <span className="text-[var(--color-accent)]">top studios</span> & artists behind the work you love.</>}
-        description="Post a brief, get matched with vetted teams in under 48 hours, and run your production with built-in invoicing and reviews."
+        title={<>Celebrate the craft — <span className="text-[var(--color-accent)]">commission the artists</span> who move you.</>}
+        description="Art appreciation begins with the makers. Post a brief, get matched with vetted artists and studios in under 48 hours, and bring your vision to life."
         cta={{ label: "Post a brief" }}
       />
 
