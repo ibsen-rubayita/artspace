@@ -1,13 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import heroArtwork from "@/assets/hero-artwork.jpg";
-import workMonolith from "@/assets/work-monolith.jpg";
-import workPlains from "@/assets/work-plains.jpg";
-import workQuietude from "@/assets/work-quietude.jpg";
+import { ARTWORKS, CATEGORIES, type Category } from "@/data/catalog";
 import galleryFigure from "@/assets/gallery-figure.jpg";
-import galleryCollage from "@/assets/gallery-collage.jpg";
-import galleryBronze from "@/assets/gallery-bronze.jpg";
-import galleryDoorway from "@/assets/gallery-doorway.jpg";
 import { ScrollToTop } from "@/components/site/ScrollToTop";
 
 export const Route = createFileRoute("/gallery")({
@@ -17,13 +11,13 @@ export const Route = createFileRoute("/gallery")({
       {
         name: "description",
         content:
-          "Browse a curated index of contemporary works — painting, sculpture, photography and mixed media from the ArtSpace community.",
+          "Browse a curated index of contemporary works — drawings, paintings, photography, anime, motion picture, 3D, 2D, sculpture and digital art.",
       },
       { property: "og:title", content: "Gallery — ArtSpace" },
       {
         property: "og:description",
         content:
-          "Browse a curated index of contemporary works — painting, sculpture, photography and mixed media from the ArtSpace community.",
+          "Browse a curated index of contemporary works across nine mediums from the ArtSpace community.",
       },
       { property: "og:image", content: galleryFigure },
       { property: "twitter:image", content: galleryFigure },
@@ -32,125 +26,12 @@ export const Route = createFileRoute("/gallery")({
   component: GalleryPage,
 });
 
-type Medium = "All" | "Painting" | "Sculpture" | "Photography" | "Mixed Media";
-
-type Piece = {
-  title: string;
-  artist: string;
-  city: string;
-  year: string;
-  medium: Exclude<Medium, "All">;
-  price: string;
-  image: string;
-  alt: string;
-  ratio: "portrait" | "square" | "tall";
-  span?: boolean;
-};
-
-const pieces: Piece[] = [
-  {
-    title: "Figure in Ochre",
-    artist: "Elena Vance",
-    city: "Lisbon",
-    year: "2025",
-    medium: "Painting",
-    price: "€ 4,200",
-    image: galleryFigure,
-    alt: "Minimal figurative painting in ochre and bone",
-    ratio: "portrait",
-    span: true,
-  },
-  {
-    title: "Quietude",
-    artist: "Marcus Thorne",
-    city: "Berlin",
-    year: "2025",
-    medium: "Photography",
-    price: "€ 1,800",
-    image: workQuietude,
-    alt: "Architectural photograph of a concrete stairwell",
-    ratio: "portrait",
-  },
-  {
-    title: "Monolith IV",
-    artist: "Arlo Studio",
-    city: "Porto",
-    year: "2025",
-    medium: "Sculpture",
-    price: "€ 6,500",
-    image: workMonolith,
-    alt: "Brutalist ceramic monolith on white pedestal",
-    ratio: "square",
-  },
-  {
-    title: "Secondary Sources",
-    artist: "Iris Halden",
-    city: "Antwerp",
-    year: "2024",
-    medium: "Mixed Media",
-    price: "€ 2,950",
-    image: galleryCollage,
-    alt: "Mixed media paper, ink and gold leaf collage",
-    ratio: "portrait",
-  },
-  {
-    title: "Ethereal Plains",
-    artist: "Sarah K. Jenkins",
-    city: "Reykjavík",
-    year: "2024",
-    medium: "Painting",
-    price: "€ 3,400",
-    image: workPlains,
-    alt: "Expressionist watercolor landscape in sage and umber",
-    ratio: "portrait",
-  },
-  {
-    title: "Cast No. 9",
-    artist: "Theo Marin",
-    city: "Marseille",
-    year: "2025",
-    medium: "Sculpture",
-    price: "€ 8,100",
-    image: galleryBronze,
-    alt: "Bronze cast sculpture on marble plinth",
-    ratio: "square",
-  },
-  {
-    title: "Threshold",
-    artist: "Hana Okabe",
-    city: "Kyoto",
-    year: "2024",
-    medium: "Photography",
-    price: "€ 1,500",
-    image: galleryDoorway,
-    alt: "Black and white photograph of a doorway and morning light",
-    ratio: "tall",
-    span: true,
-  },
-  {
-    title: "Untitled Hours",
-    artist: "Elena Vance",
-    city: "Lisbon",
-    year: "2026",
-    medium: "Painting",
-    price: "€ 5,100",
-    image: heroArtwork,
-    alt: "Abstract oil painting with textured ochre brushstrokes",
-    ratio: "portrait",
-  },
-];
-
-const mediums: Medium[] = ["All", "Painting", "Sculpture", "Photography", "Mixed Media"];
-
-const ratioClass: Record<Piece["ratio"], string> = {
-  portrait: "aspect-[4/5]",
-  square: "aspect-square",
-  tall: "aspect-[3/4] md:aspect-[5/6]",
-};
+type Filter = "All" | Category;
+const FILTERS: Filter[] = ["All", ...CATEGORIES];
 
 function GalleryPage() {
-  const [filter, setFilter] = useState<Medium>("All");
-  const filtered = filter === "All" ? pieces : pieces.filter((p) => p.medium === filter);
+  const [filter, setFilter] = useState<Filter>("All");
+  const filtered = filter === "All" ? ARTWORKS : ARTWORKS.filter((a) => a.category === filter);
 
   return (
     <div className="bg-canvas text-ink overflow-x-hidden">
@@ -195,7 +76,7 @@ function GalleryPage() {
       {/* Filter bar */}
       <section className="px-6 md:px-10 max-w-7xl mx-auto py-8 md:py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
         <div className="flex flex-wrap gap-2">
-          {mediums.map((m) => {
+          {FILTERS.map((m) => {
             const active = filter === m;
             return (
               <button
@@ -215,7 +96,7 @@ function GalleryPage() {
           })}
         </div>
         <p className="text-[10.5px] uppercase tracking-[0.25em] text-muted-foreground">
-          Showing <span className="text-ink">{filtered.length.toString().padStart(2, "0")}</span> / {pieces.length.toString().padStart(2, "0")} works
+          Showing <span className="text-ink">{filtered.length.toString().padStart(2, "0")}</span> / {ARTWORKS.length.toString().padStart(2, "0")} works
         </p>
       </section>
 
@@ -226,21 +107,17 @@ function GalleryPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
           {filtered.map((p, i) => (
             <article
-              key={`${p.title}-${i}`}
-              className={[
-                "group cursor-pointer animate-fade-up",
-                p.span ? "lg:col-span-2" : "",
-              ].join(" ")}
+              key={p.id}
+              className="group cursor-pointer animate-fade-up"
               style={{ animationDelay: `${Math.min(i, 6) * 80}ms` }}
             >
-              <div className={`frame relative w-full ${ratioClass[p.ratio]}`}>
+              <div className="frame relative w-full aspect-[4/5]">
                 <img
                   src={p.image}
-                  alt={p.alt}
+                  alt={`${p.title} by ${p.artist}`}
                   loading="lazy"
                   className="w-full h-full object-cover"
                 />
-                {/* hover veil + reveal */}
                 <div className="absolute inset-0 bg-ink/0 group-hover:bg-ink/35 transition-colors duration-500" />
                 <div className="absolute inset-x-0 bottom-0 p-5 md:p-6 translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
                   <span className="inline-flex items-center gap-2 bg-canvas text-ink px-3 py-1.5 text-[10px] uppercase tracking-[0.22em] font-medium">
@@ -264,7 +141,7 @@ function GalleryPage() {
                 <div className="text-right shrink-0">
                   <p className="font-serif text-base text-ink">{p.price}</p>
                   <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                    {p.medium} · {p.year}
+                    {p.category} · {p.year}
                   </p>
                 </div>
               </div>

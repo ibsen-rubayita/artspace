@@ -1,10 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { UserPlus, Building2, Palette, ArrowRight, Star } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ScrollToTop } from "@/components/site/ScrollToTop";
 import { PageHero } from "@/components/site/PageHero";
 import { HorizontalRail, type RailItem } from "@/components/site/HorizontalRail";
+import { useRequireAuth } from "@/hooks/use-require-auth";
+import { useAuth } from "@/hooks/use-auth";
+import { supabase } from "@/integrations/supabase/client";
 
 import hireArtist from "@/assets/hire-artist.jpg";
 import hireStudio from "@/assets/hire-studio.jpg";
@@ -52,6 +57,29 @@ const STUDIOS: RailItem[] = [
 ];
 
 function HirePage() {
+  const requireAuth = useRequireAuth();
+  const { user } = useAuth();
+  const [form, setForm] = useState({ title: "", discipline: "Concept Art", budget: "", deadline: "", message: "" });
+  const [busy, setBusy] = useState(false);
+
+  const submit = () => requireAuth(async () => {
+    if (!form.title.trim() || !form.message.trim()) return toast.error("Please fill in title and description.");
+    setBusy(true);
+    const { error } = await supabase.from("submissions").insert({
+      kind: "hire_brief",
+      name: user?.user_metadata?.first_name ?? user?.email ?? null,
+      email: user?.email ?? null,
+      subject: `Hire brief: ${form.title}`,
+      message: form.message,
+      payload: { ...form, recipient: "ibsenrubayita@gmail.com" },
+      user_id: user?.id ?? null,
+    });
+    setBusy(false);
+    if (error) return toast.error(error.message);
+    toast.success("Brief submitted — we'll be in touch within 48h.");
+    setForm({ title: "", discipline: "Concept Art", budget: "", deadline: "", message: "" });
+  }, "post a brief");
+
   return (
     <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)]">
       <Header />
@@ -59,8 +87,8 @@ function HirePage() {
       <PageHero
         eyebrow="Hire on ArtSpace"
         icon={UserPlus}
-        title={<>Hire the <span className="text-[var(--color-accent)]">top studios</span> & artists behind the work you love.</>}
-        description="Post a brief, get matched with vetted teams in under 48 hours, and run your production with built-in invoicing and reviews."
+        title={<>Celebrate the craft — <span className="text-[var(--color-accent)]">commission the artists</span> who move you.</>}
+        description="Art appreciation begins with the makers. Post a brief, get matched with vetted artists and studios in under 48 hours, and bring your vision to life."
         cta={{ label: "Post a brief" }}
       />
 
@@ -93,26 +121,29 @@ function HirePage() {
             <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">We'll review and send shortlists in 24–48h.</p>
 
             <div className="mt-5 grid sm:grid-cols-2 gap-3">
-              <input className="h-10 rounded-lg border px-3 text-sm bg-[var(--color-background)]" placeholder="Project title" style={{ borderColor: "var(--color-border)" }} />
-              <select className="h-10 rounded-lg border px-3 text-sm bg-[var(--color-background)]" style={{ borderColor: "var(--color-border)" }}>
-                <option>Discipline</option>
+              <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="h-10 rounded-lg border px-3 text-sm bg-[var(--color-background)]" placeholder="Project title" style={{ borderColor: "var(--color-border)" }} />
+              <select value={form.discipline} onChange={(e) => setForm({ ...form, discipline: e.target.value })} className="h-10 rounded-lg border px-3 text-sm bg-[var(--color-background)]" style={{ borderColor: "var(--color-border)" }}>
                 <option>Concept Art</option>
                 <option>3D / Animation</option>
                 <option>Illustration</option>
                 <option>Photography</option>
                 <option>Sculpture</option>
               </select>
-              <input className="h-10 rounded-lg border px-3 text-sm bg-[var(--color-background)]" placeholder="Budget (USD)" style={{ borderColor: "var(--color-border)" }} />
-              <input className="h-10 rounded-lg border px-3 text-sm bg-[var(--color-background)]" placeholder="Deadline" style={{ borderColor: "var(--color-border)" }} />
+              <input value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })} className="h-10 rounded-lg border px-3 text-sm bg-[var(--color-background)]" placeholder="Budget (USD)" style={{ borderColor: "var(--color-border)" }} />
+              <input value={form.deadline} onChange={(e) => setForm({ ...form, deadline: e.target.value })} className="h-10 rounded-lg border px-3 text-sm bg-[var(--color-background)]" placeholder="Deadline" style={{ borderColor: "var(--color-border)" }} />
             </div>
             <textarea
               rows={4}
+              value={form.message}
+              onChange={(e) => setForm({ ...form, message: e.target.value })}
               placeholder="Describe the brief, references and deliverables…"
               className="mt-3 w-full rounded-lg border p-3 text-sm bg-[var(--color-background)]"
               style={{ borderColor: "var(--color-border)" }}
             />
             <div className="mt-4 flex flex-wrap items-center gap-2">
-              <button className="btn btn-cta px-5 py-2.5 text-sm">Submit brief <ArrowRight className="h-4 w-4" /></button>
+              <button onClick={submit} disabled={busy} className="btn btn-cta px-5 py-2.5 text-sm">
+                {busy ? "Submitting..." : "Submit brief"} <ArrowRight className="h-4 w-4" />
+              </button>
               <button className="btn btn-ghost px-5 py-2.5 text-sm">Save draft</button>
             </div>
           </div>

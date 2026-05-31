@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowRight, Play, Sparkles, Briefcase, Palette, Building2 } from "lucide-react";
+import { ArrowRight, Sparkles, Briefcase, Palette, Building2 } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ScrollToTop } from "@/components/site/ScrollToTop";
 import { HorizontalRail, type RailItem } from "@/components/site/HorizontalRail";
+import { HeroMontage } from "@/components/site/HeroMontage";
 
-import heroImg from "@/assets/hero-showcase.jpg";
 import artFigure from "@/assets/gallery-figure.jpg";
 import artCollage from "@/assets/gallery-collage.jpg";
 import artBronze from "@/assets/gallery-bronze.jpg";
@@ -19,6 +19,9 @@ import art2 from "@/assets/art-2.jpg";
 import art5 from "@/assets/art-5.jpg";
 import art7 from "@/assets/art-7.jpg";
 import art8 from "@/assets/art-8.jpg";
+import art11 from "@/assets/art-11.jpg";
+import art14 from "@/assets/art-14.jpg";
+import art17 from "@/assets/art-17.jpg";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -72,20 +75,20 @@ function HomePage() {
             </div>
 
             <h1 className="mt-5 text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.05]">
-              Hire the <span className="text-[var(--color-accent)]">Top Studios</span>
-              <br /> behind the work you love.
+              Where every <span className="text-[var(--color-accent)]">brushstroke</span>
+              <br /> finds its admirer.
             </h1>
 
             <p className="mt-5 text-[15px] lg:text-base text-[var(--color-muted-foreground)] max-w-xl leading-relaxed">
-              Find qualified outsource studios, full-time artists and dedicated teams for your next
-              production — concept art, 3D, animation, illustration and post.
+              A home for art lovers, makers and collectors — discover, learn, hire and
+              shop curated contemporary work from artists and studios worldwide.
             </p>
 
             <div className="mt-7 flex flex-wrap items-center gap-3">
-              <a href="/hire" className="btn btn-cta px-5 py-2.5 text-sm">
-                Hire a studio <ArrowRight className="h-4 w-4" />
+              <a href="/explore" className="btn btn-cta px-5 py-2.5 text-sm">
+                Start exploring <ArrowRight className="h-4 w-4" />
               </a>
-              <a href="/hire" className="btn btn-ghost px-5 py-2.5 text-sm">List your studio</a>
+              <a href="/hire" className="btn btn-ghost px-5 py-2.5 text-sm">Hire a studio</a>
             </div>
 
             <div className="mt-10 grid grid-cols-3 gap-6 max-w-md">
@@ -103,24 +106,16 @@ function HomePage() {
           </div>
 
           <div className="lg:col-span-6 animate-fade-up delay-200">
-            <div className="relative rounded-xl overflow-hidden border" style={{ borderColor: "var(--color-border)" }}>
-              <img
-                src={heroImg}
-                alt="Featured concept artwork showcase"
-                width={1280}
-                height={1280}
-                className="w-full h-[420px] lg:h-[520px] object-cover"
-              />
-              <button aria-label="Play showcase reel" className="absolute inset-0 grid place-items-center group">
-                <span className="h-14 w-14 rounded-full grid place-items-center bg-white/15 backdrop-blur-md border border-white/30 group-hover:scale-110 transition-transform">
-                  <Play className="h-5 w-5 text-white fill-white" />
-                </span>
-              </button>
-              <div className="absolute left-4 bottom-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/55 backdrop-blur-md border border-white/15">
-                <span className="h-6 w-6 rounded-full bg-gradient-to-br from-[var(--color-accent)] to-purple-500" />
-                <span className="text-xs text-white/90">Artwork by <span className="font-medium">Jorce Disingana</span></span>
-              </div>
-            </div>
+            <HeroMontage
+              slides={[
+                { src: artHero, title: "Inner Light" },
+                { src: artQuietude, title: "Quietude" },
+                { src: art17, title: "Elven Queen" },
+                { src: art14, title: "The Thinker" },
+                { src: artMonolith, title: "Monolith" },
+                { src: art11, title: "Blossom Reverie" },
+              ]}
+            />
           </div>
         </div>
 

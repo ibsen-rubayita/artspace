@@ -7,10 +7,15 @@ import {
   X,
   ChevronDown,
   Hexagon,
+  LogOut,
+  User as UserIcon,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "@/hooks/use-theme";
+import { useAuth } from "@/hooks/use-auth";
+import { GlobalSearch } from "@/components/site/GlobalSearch";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 type SubLink = { label: string; to: string; hash?: string; badge?: "SALE" | "NEW" };
 type NavItem = { label: string; to: string; items: SubLink[] };
@@ -62,17 +67,6 @@ const NAV: NavItem[] = [
     ],
   },
 ];
-
-const SEARCH_FILTERS = [
-  "Search Artworks",
-  "Search Artists",
-  "Search Studios",
-  "Search Digital Products",
-  "Search Prints",
-  "Search Jobs",
-];
-
-const RECENT = ["concept art studios", "matte painting", "junior 3d artist", "sci-fi prints"];
 
 function Badge({ kind }: { kind: "SALE" | "NEW" }) {
   return (
@@ -152,79 +146,18 @@ function NavDropdown({ item }: { item: NavItem }) {
   );
 }
 
-function SearchBar() {
-  const [focused, setFocused] = useState(false);
-  const [value, setValue] = useState("");
-  const [checks, setChecks] = useState<Record<string, boolean>>({});
-  const wrapRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const onClick = (e: MouseEvent) => {
-      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setFocused(false);
-    };
-    document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
-  }, []);
-
+function SearchTrigger({ onOpen }: { onOpen: () => void }) {
   return (
-    <div ref={wrapRef} className="relative w-full max-w-[340px]">
-      <div
-        className={cn("flex items-center h-9 rounded-lg border px-3 transition-colors", "bg-[var(--color-surface)]")}
-        style={{ borderColor: focused ? "var(--color-accent)" : "var(--color-border)" }}
-      >
-        <Search className="h-4 w-4 text-[var(--color-muted-foreground)] shrink-0" />
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onFocus={() => setFocused(true)}
-          placeholder="Search ArtSpace"
-          className="bg-transparent outline-none border-0 px-2 text-sm w-full placeholder:text-[var(--color-muted-foreground)]"
-        />
-      </div>
-
-      {focused && (
-        <div className="dropdown-panel animate-dropdown absolute left-0 right-0 top-full mt-2 p-3 z-50">
-          <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted-foreground)] px-1 mb-1">
-            Recent searches
-          </div>
-          <div className="flex flex-col">
-            {RECENT.map((r) => (
-              <button
-                key={r}
-                onMouseDown={() => setValue(r)}
-                className="flex items-center gap-2 text-sm px-2 py-1.5 rounded-md hover:bg-[var(--color-surface-2)] text-left"
-              >
-                <Search className="h-3.5 w-3.5 text-[var(--color-muted-foreground)]" />
-                <span>{r}</span>
-              </button>
-            ))}
-          </div>
-
-          <div className="my-3 h-px bg-[var(--color-border)]" />
-
-          <div className="text-[11px] uppercase tracking-wider text-[var(--color-muted-foreground)] px-1 mb-1">
-            Filter by
-          </div>
-          <div className="grid grid-cols-1 gap-0.5">
-            {SEARCH_FILTERS.map((f) => (
-              <label
-                key={f}
-                className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-[var(--color-surface-2)] cursor-pointer text-sm"
-              >
-                <input
-                  type="checkbox"
-                  checked={!!checks[f]}
-                  onChange={(e) => setChecks((c) => ({ ...c, [f]: e.target.checked }))}
-                  className="h-3.5 w-3.5 accent-[var(--color-accent)]"
-                />
-                <span>{f}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
+    <button
+      onClick={onOpen}
+      className="relative w-full max-w-[340px] flex items-center h-9 rounded-lg border px-3 bg-[var(--color-surface)] text-left hover:border-[var(--color-accent)] transition-colors"
+      style={{ borderColor: "var(--color-border)" }}
+      aria-label="Open search"
+    >
+      <Search className="h-4 w-4 text-[var(--color-muted-foreground)] shrink-0" />
+      <span className="px-2 text-sm text-[var(--color-muted-foreground)] flex-1">Search ArtSpace</span>
+      <kbd className="hidden sm:inline-block text-[10px] px-1.5 py-0.5 rounded border" style={{ borderColor: "var(--color-border)" }}>⌘K</kbd>
+    </button>
   );
 }
 
@@ -242,7 +175,23 @@ function ThemeToggle() {
   );
 }
 
-function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
+function MobileDrawer({
+  open,
+  onClose,
+  onOpenSearch,
+  onSignIn,
+  onSignUp,
+  user,
+  onSignOut,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onOpenSearch: () => void;
+  onSignIn: () => void;
+  onSignUp: () => void;
+  user: ReturnType<typeof useAuth>["user"];
+  onSignOut: () => void;
+}) {
   const [openItem, setOpenItem] = useState<string | null>(null);
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -265,7 +214,7 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
         </div>
 
         <div className="p-4">
-          <SearchBar />
+          <SearchTrigger onOpen={() => { onClose(); onOpenSearch(); }} />
         </div>
 
         <nav className="flex-1 overflow-y-auto px-2 pb-4">
@@ -296,10 +245,58 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
         </nav>
 
         <div className="p-4 border-t flex flex-col gap-2" style={{ borderColor: "var(--color-border)" }}>
-          <button className="btn btn-ghost w-full">Sign in</button>
-          <button className="btn btn-cta w-full">Sign up</button>
+          {user ? (
+            <button onClick={() => { onClose(); onSignOut(); }} className="btn btn-ghost w-full inline-flex items-center justify-center gap-2">
+              <LogOut className="h-4 w-4" /> Sign out
+            </button>
+          ) : (
+            <>
+              <button onClick={() => { onClose(); onSignIn(); }} className="btn btn-ghost w-full">Sign in</button>
+              <button onClick={() => { onClose(); onSignUp(); }} className="btn btn-cta w-full">Sign up</button>
+            </>
+          )}
         </div>
       </aside>
+    </div>
+  );
+}
+
+function UserMenu() {
+  const { user, signOut } = useAuth();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const h = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
+  }, []);
+  if (!user) return null;
+  const initials = (user.user_metadata?.first_name?.[0] ?? user.email?.[0] ?? "A").toUpperCase();
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="h-9 w-9 rounded-full grid place-items-center text-sm font-medium text-white"
+        style={{ background: "linear-gradient(135deg, var(--color-accent), color-mix(in oklab, var(--color-accent) 50%, #000))" }}
+        aria-label="Account menu"
+      >
+        {initials}
+      </button>
+      {open && (
+        <div className="dropdown-panel animate-dropdown absolute right-0 top-full mt-2 min-w-[220px] py-2 z-50">
+          <div className="px-3 py-2 text-xs text-[var(--color-muted-foreground)] truncate">{user.email}</div>
+          <div className="my-1 h-px bg-[var(--color-border)]" />
+          <button className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm hover:bg-[var(--color-surface-2)]">
+            <UserIcon className="h-4 w-4" /> Profile
+          </button>
+          <button
+            onClick={async () => { await signOut(); setOpen(false); toast.success("Signed out"); }}
+            className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm hover:bg-[var(--color-surface-2)]"
+          >
+            <LogOut className="h-4 w-4" /> Sign out
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -307,12 +304,25 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
 export function Header() {
   const [drawer, setDrawer] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const { user, openAuth, signOut } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 4);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, []);
 
   return (
@@ -346,18 +356,42 @@ export function Header() {
         <div className="hidden lg:block flex-1" />
 
         <div className="hidden lg:flex items-center gap-3">
-          <SearchBar />
-          <button className="btn btn-ghost">Sign in</button>
+          <SearchTrigger onOpen={() => setSearchOpen(true)} />
+          {user ? (
+            <UserMenu />
+          ) : (
+            <>
+              <button onClick={() => openAuth("signin")} className="btn btn-ghost">Sign in</button>
+              <button onClick={() => openAuth("signup")} className="btn btn-cta">Sign up</button>
+            </>
+          )}
           <ThemeToggle />
         </div>
 
         <div className="flex items-center gap-2 lg:hidden">
-          <button className="btn btn-ghost h-9 px-3 text-xs">Sign in</button>
+          <button onClick={() => setSearchOpen(true)} aria-label="Search" className="h-9 w-9 grid place-items-center rounded-lg hover:bg-[var(--color-surface)]">
+            <Search className="h-4 w-4" />
+          </button>
+          {user ? (
+            <UserMenu />
+          ) : (
+            <button onClick={() => openAuth("signin")} className="btn btn-ghost h-9 px-3 text-xs">Sign in</button>
+          )}
           <ThemeToggle />
         </div>
       </div>
 
-      <MobileDrawer open={drawer} onClose={() => setDrawer(false)} />
+      <MobileDrawer
+        open={drawer}
+        onClose={() => setDrawer(false)}
+        onOpenSearch={() => setSearchOpen(true)}
+        onSignIn={() => openAuth("signin")}
+        onSignUp={() => openAuth("signup")}
+        user={user}
+        onSignOut={async () => { await signOut(); toast.success("Signed out"); }}
+      />
+
+      <GlobalSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 }
