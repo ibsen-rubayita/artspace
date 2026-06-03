@@ -85,10 +85,10 @@ function Logo() {
   return (
     <Link
       to="/"
-      className="select-none font-serif text-[1.35rem] font-semibold tracking-tight leading-none"
+      className="select-none text-[1.15rem] font-semibold tracking-tight leading-none"
       aria-label="ArtSpace — home"
     >
-      Art<span className="italic text-[var(--color-accent)]">Space</span>
+      Art<span className="text-[var(--color-accent)]">Space</span>
     </Link>
   );
 }
