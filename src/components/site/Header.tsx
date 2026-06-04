@@ -25,8 +25,7 @@ const NAV: NavItem[] = [
     to: "/explore",
     items: [
       { label: "Gallery", to: "/gallery" },
-      { label: "Blogs", to: "/explore", hash: "blogs" },
-      { label: "Magazine", to: "/explore", hash: "magazine" },
+      { label: "Blogs & Magazine", to: "/blogs" },
     ],
   },
   {
