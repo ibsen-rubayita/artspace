@@ -113,8 +113,8 @@ function ExplorePage() {
       <section className="mx-auto max-w-[1400px] px-4 lg:px-6 pb-12">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <SectionLink to="/gallery" icon={ImageIcon} title="Gallery" desc="Browse curated works by medium and artist." />
-          <SectionLink href="#blogs" icon={BookOpen} title="Blogs" desc="Long-form notes from working artists." />
-          <SectionLink href="#magazine" icon={Newspaper} title="Magazine" desc="Quarterly features and interviews." />
+          <SectionLink to="/blogs" icon={BookOpen} title="Blogs & Magazine" desc="Stories from artists about their works." />
+          <SectionLink to="/blogs" icon={Newspaper} title="Magazine Issue 14" desc="The Quiet Studios — out now." />
         </div>
       </section>
 
