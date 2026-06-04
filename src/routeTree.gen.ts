@@ -15,6 +15,7 @@ import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as HireRouteImport } from './routes/hire'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as ExploreRouteImport } from './routes/explore'
+import { Route as BlogsRouteImport } from './routes/blogs'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
@@ -50,6 +51,11 @@ const ExploreRoute = ExploreRouteImport.update({
   path: '/explore',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogsRoute = BlogsRouteImport.update({
+  id: '/blogs',
+  path: '/blogs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -72,6 +78,7 @@ const ApiPublicNotifyRoute = ApiPublicNotifyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/blogs': typeof BlogsRoute
   '/explore': typeof ExploreRoute
   '/gallery': typeof GalleryRoute
   '/hire': typeof HireRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/blogs': typeof BlogsRoute
   '/explore': typeof ExploreRoute
   '/gallery': typeof GalleryRoute
   '/hire': typeof HireRoute
@@ -96,6 +104,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/blogs': typeof BlogsRoute
   '/explore': typeof ExploreRoute
   '/gallery': typeof GalleryRoute
   '/hire': typeof HireRoute
@@ -109,6 +118,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/blogs'
     | '/explore'
     | '/gallery'
     | '/hire'
@@ -120,6 +130,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/blogs'
     | '/explore'
     | '/gallery'
     | '/hire'
@@ -132,6 +143,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/blogs'
     | '/explore'
     | '/gallery'
     | '/hire'
@@ -145,6 +157,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  BlogsRoute: typeof BlogsRoute
   ExploreRoute: typeof ExploreRoute
   GalleryRoute: typeof GalleryRoute
   HireRoute: typeof HireRoute
@@ -198,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExploreRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blogs': {
+      id: '/blogs'
+      path: '/blogs'
+      fullPath: '/blogs'
+      preLoaderRoute: typeof BlogsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -243,6 +263,7 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  BlogsRoute: BlogsRoute,
   ExploreRoute: ExploreRoute,
   GalleryRoute: GalleryRoute,
   HireRoute: HireRoute,
