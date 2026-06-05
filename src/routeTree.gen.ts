@@ -9,8 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ShopRouteImport } from './routes/shop'
 import { Route as SchoolsRouteImport } from './routes/schools'
+import { Route as ShopRouteImport } from './routes/shop'
 import { Route as NetworkRouteImport } from './routes/network'
 import { Route as MagazineRouteImport } from './routes/magazine'
 import { Route as LearnRouteImport } from './routes/learn'
@@ -24,14 +24,14 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as ApiPublicNotifyRouteImport } from './routes/api/public/notify'
 
-const ShopRoute = ShopRouteImport.update({
-  id: '/shop',
-  path: '/shop',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SchoolsRoute = SchoolsRouteImport.update({
   id: '/schools',
   path: '/schools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopRoute = ShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NetworkRoute = NetworkRouteImport.update({
@@ -104,8 +104,8 @@ export interface FileRoutesByFullPath {
   '/learn': typeof LearnRoute
   '/magazine': typeof MagazineRoute
   '/network': typeof NetworkRoute
-  '/schools': typeof SchoolsRoute
   '/shop': typeof ShopRoute
+  '/schools': typeof SchoolsRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/api/public/notify': typeof ApiPublicNotifyRoute
 }
@@ -119,8 +119,8 @@ export interface FileRoutesByTo {
   '/learn': typeof LearnRoute
   '/magazine': typeof MagazineRoute
   '/network': typeof NetworkRoute
-  '/schools': typeof SchoolsRoute
   '/shop': typeof ShopRoute
+  '/schools': typeof SchoolsRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/api/public/notify': typeof ApiPublicNotifyRoute
 }
@@ -136,8 +136,8 @@ export interface FileRoutesById {
   '/learn': typeof LearnRoute
   '/magazine': typeof MagazineRoute
   '/network': typeof NetworkRoute
-  '/schools': typeof SchoolsRoute
   '/shop': typeof ShopRoute
+  '/schools': typeof SchoolsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/api/public/notify': typeof ApiPublicNotifyRoute
 }
@@ -153,8 +153,8 @@ export interface FileRouteTypes {
     | '/learn'
     | '/magazine'
     | '/network'
-    | '/schools'
     | '/shop'
+    | '/schools'
     | '/profile'
     | '/api/public/notify'
   fileRoutesByTo: FileRoutesByTo
@@ -168,8 +168,8 @@ export interface FileRouteTypes {
     | '/learn'
     | '/magazine'
     | '/network'
-    | '/schools'
     | '/shop'
+    | '/schools'
     | '/profile'
     | '/api/public/notify'
   id:
@@ -184,8 +184,8 @@ export interface FileRouteTypes {
     | '/learn'
     | '/magazine'
     | '/network'
-    | '/schools'
     | '/shop'
+    | '/schools'
     | '/_authenticated/profile'
     | '/api/public/notify'
   fileRoutesById: FileRoutesById
@@ -201,25 +201,25 @@ export interface RootRouteChildren {
   LearnRoute: typeof LearnRoute
   MagazineRoute: typeof MagazineRoute
   NetworkRoute: typeof NetworkRoute
-  SchoolsRoute: typeof SchoolsRoute
   ShopRoute: typeof ShopRoute
+  SchoolsRoute: typeof SchoolsRoute
   ApiPublicNotifyRoute: typeof ApiPublicNotifyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/shop': {
-      id: '/shop'
-      path: '/shop'
-      fullPath: '/shop'
-      preLoaderRoute: typeof ShopRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/schools': {
       id: '/schools'
       path: '/schools'
       fullPath: '/schools'
       preLoaderRoute: typeof SchoolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop': {
+      id: '/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof ShopRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/network': {
@@ -331,20 +331,10 @@ const rootRouteChildren: RootRouteChildren = {
   LearnRoute: LearnRoute,
   MagazineRoute: MagazineRoute,
   NetworkRoute: NetworkRoute,
-  SchoolsRoute: SchoolsRoute,
   ShopRoute: ShopRoute,
+  SchoolsRoute: SchoolsRoute,
   ApiPublicNotifyRoute: ApiPublicNotifyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
