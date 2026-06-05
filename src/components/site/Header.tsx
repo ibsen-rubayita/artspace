@@ -25,43 +25,42 @@ const NAV: NavItem[] = [
     to: "/explore",
     items: [
       { label: "Gallery", to: "/gallery" },
-      { label: "Blogs & Magazine", to: "/blogs" },
+      { label: "Blogs", to: "/blogs" },
+      { label: "Magazine", to: "/magazine" },
     ],
   },
   {
-    label: "Learn",
+    label: "Courses",
     to: "/learn",
     items: [
-      { label: "Learning", to: "/learn", hash: "learning" },
-      { label: "Challenges", to: "/learn", hash: "challenges" },
-      { label: "Schools and Training Centers", to: "/learn", hash: "schools" },
+      { label: "Cartoon Characters", to: "/learn", hash: "cartoon" },
+      { label: "Anime Characters", to: "/learn", hash: "anime" },
+      { label: "Game Characters", to: "/learn", hash: "game" },
+      { label: "Professional Tools", to: "/learn", hash: "tools" },
+    ],
+  },
+  {
+    label: "Schools",
+    to: "/schools",
+    items: [
+      { label: "Schools & Ateliers", to: "/schools" },
+      { label: "Residencies", to: "/schools", hash: "residencies" },
     ],
   },
   {
     label: "Shop",
     to: "/shop",
     items: [
-      { label: "Marketplace", to: "/shop", hash: "marketplace", badge: "SALE" },
-      { label: "Prints", to: "/shop", hash: "prints", badge: "NEW" },
+      { label: "Tools", to: "/shop", hash: "tools", badge: "SALE" },
+      { label: "Arts Sales", to: "/shop", hash: "arts", badge: "NEW" },
     ],
   },
   {
-    label: "Find a Job",
-    to: "/jobs",
+    label: "Network",
+    to: "/network",
     items: [
-      { label: "Job Listings", to: "/jobs", hash: "listings" },
-      { label: "Hiring Studios", to: "/jobs", hash: "studios" },
-      { label: "Saved Jobs", to: "/jobs", hash: "saved" },
-      { label: "Job Resources", to: "/jobs", hash: "resources" },
-    ],
-  },
-  {
-    label: "Hire",
-    to: "/hire",
-    items: [
-      { label: "Post a Job", to: "/hire", hash: "post" },
-      { label: "Find an Artist", to: "/hire", hash: "artists" },
-      { label: "Find a Studio", to: "/hire", hash: "studios" },
+      { label: "Jobs", to: "/jobs" },
+      { label: "Hiring", to: "/hire" },
     ],
   },
 ];
