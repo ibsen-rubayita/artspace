@@ -10,6 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ShopRouteImport } from './routes/shop'
+import { Route as SchoolsRouteImport } from './routes/schools'
+import { Route as NetworkRouteImport } from './routes/network'
+import { Route as MagazineRouteImport } from './routes/magazine'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as HireRouteImport } from './routes/hire'
@@ -24,6 +27,21 @@ import { Route as ApiPublicNotifyRouteImport } from './routes/api/public/notify'
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SchoolsRoute = SchoolsRouteImport.update({
+  id: '/schools',
+  path: '/schools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NetworkRoute = NetworkRouteImport.update({
+  id: '/network',
+  path: '/network',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MagazineRoute = MagazineRouteImport.update({
+  id: '/magazine',
+  path: '/magazine',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LearnRoute = LearnRouteImport.update({
@@ -84,6 +102,9 @@ export interface FileRoutesByFullPath {
   '/hire': typeof HireRoute
   '/jobs': typeof JobsRoute
   '/learn': typeof LearnRoute
+  '/magazine': typeof MagazineRoute
+  '/network': typeof NetworkRoute
+  '/schools': typeof SchoolsRoute
   '/shop': typeof ShopRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/api/public/notify': typeof ApiPublicNotifyRoute
@@ -96,6 +117,9 @@ export interface FileRoutesByTo {
   '/hire': typeof HireRoute
   '/jobs': typeof JobsRoute
   '/learn': typeof LearnRoute
+  '/magazine': typeof MagazineRoute
+  '/network': typeof NetworkRoute
+  '/schools': typeof SchoolsRoute
   '/shop': typeof ShopRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/api/public/notify': typeof ApiPublicNotifyRoute
@@ -110,6 +134,9 @@ export interface FileRoutesById {
   '/hire': typeof HireRoute
   '/jobs': typeof JobsRoute
   '/learn': typeof LearnRoute
+  '/magazine': typeof MagazineRoute
+  '/network': typeof NetworkRoute
+  '/schools': typeof SchoolsRoute
   '/shop': typeof ShopRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/api/public/notify': typeof ApiPublicNotifyRoute
@@ -124,6 +151,9 @@ export interface FileRouteTypes {
     | '/hire'
     | '/jobs'
     | '/learn'
+    | '/magazine'
+    | '/network'
+    | '/schools'
     | '/shop'
     | '/profile'
     | '/api/public/notify'
@@ -136,6 +166,9 @@ export interface FileRouteTypes {
     | '/hire'
     | '/jobs'
     | '/learn'
+    | '/magazine'
+    | '/network'
+    | '/schools'
     | '/shop'
     | '/profile'
     | '/api/public/notify'
@@ -149,6 +182,9 @@ export interface FileRouteTypes {
     | '/hire'
     | '/jobs'
     | '/learn'
+    | '/magazine'
+    | '/network'
+    | '/schools'
     | '/shop'
     | '/_authenticated/profile'
     | '/api/public/notify'
@@ -163,6 +199,9 @@ export interface RootRouteChildren {
   HireRoute: typeof HireRoute
   JobsRoute: typeof JobsRoute
   LearnRoute: typeof LearnRoute
+  MagazineRoute: typeof MagazineRoute
+  NetworkRoute: typeof NetworkRoute
+  SchoolsRoute: typeof SchoolsRoute
   ShopRoute: typeof ShopRoute
   ApiPublicNotifyRoute: typeof ApiPublicNotifyRoute
 }
@@ -174,6 +213,27 @@ declare module '@tanstack/react-router' {
       path: '/shop'
       fullPath: '/shop'
       preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schools': {
+      id: '/schools'
+      path: '/schools'
+      fullPath: '/schools'
+      preLoaderRoute: typeof SchoolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/network': {
+      id: '/network'
+      path: '/network'
+      fullPath: '/network'
+      preLoaderRoute: typeof NetworkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/magazine': {
+      id: '/magazine'
+      path: '/magazine'
+      fullPath: '/magazine'
+      preLoaderRoute: typeof MagazineRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learn': {
@@ -269,9 +329,22 @@ const rootRouteChildren: RootRouteChildren = {
   HireRoute: HireRoute,
   JobsRoute: JobsRoute,
   LearnRoute: LearnRoute,
+  MagazineRoute: MagazineRoute,
+  NetworkRoute: NetworkRoute,
+  SchoolsRoute: SchoolsRoute,
   ShopRoute: ShopRoute,
   ApiPublicNotifyRoute: ApiPublicNotifyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

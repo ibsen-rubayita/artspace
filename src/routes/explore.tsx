@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Compass, ArrowRight, BookOpen, Newspaper, Image as ImageIcon } from "lucide-react";
+// (icons reused for section cards)
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ScrollToTop } from "@/components/site/ScrollToTop";
@@ -113,8 +114,8 @@ function ExplorePage() {
       <section className="mx-auto max-w-[1400px] px-4 lg:px-6 pb-12">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <SectionLink to="/gallery" icon={ImageIcon} title="Gallery" desc="Browse curated works by medium and artist." />
-          <SectionLink to="/blogs" icon={BookOpen} title="Blogs & Magazine" desc="Stories from artists about their works." />
-          <SectionLink to="/blogs" icon={Newspaper} title="Magazine Issue 14" desc="The Quiet Studios — out now." />
+          <SectionLink to="/blogs" icon={BookOpen} title="Blogs" desc="Stories from artists about their works." />
+          <SectionLink to="/magazine" icon={Newspaper} title="Magazine" desc="Issues, studio visits and long reads." />
         </div>
       </section>
 

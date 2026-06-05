@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { GraduationCap, Trophy, School, PlayCircle, Clock, Users } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { GraduationCap, PlayCircle, Clock, Users, Sparkles, School } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ScrollToTop } from "@/components/site/ScrollToTop";
@@ -10,87 +10,86 @@ import { toast } from "sonner";
 
 import learnStudio from "@/assets/learn-studio.jpg";
 import learnCourse from "@/assets/learn-course.jpg";
-import learnSchool from "@/assets/learn-school.jpg";
 import art2 from "@/assets/art-2.jpg";
 import art5 from "@/assets/art-5.jpg";
-import art6 from "@/assets/art-6.jpg";
 import art7 from "@/assets/art-7.jpg";
 import art8 from "@/assets/art-8.jpg";
-import gBronze from "@/assets/gallery-bronze.jpg";
-import gDoorway from "@/assets/gallery-doorway.jpg";
+import art11 from "@/assets/art-11.jpg";
+import art12 from "@/assets/art-12.jpg";
+import art17 from "@/assets/art-17.jpg";
 
 export const Route = createFileRoute("/learn")({
   head: () => ({
     meta: [
-      { title: "Learn — ArtSpace" },
-      { name: "description", content: "Courses, challenges, and schools for artists at every level." },
-      { property: "og:title", content: "Learn — ArtSpace" },
-      { property: "og:description", content: "Courses, challenges, and schools for artists at every level." },
+      { title: "Courses — ArtSpace" },
+      { name: "description", content: "Online courses by working digital artists — cartoon, anime, game character design and the professional tools that ship them: Photoshop, Procreate, Blender, ZBrush and more." },
+      { property: "og:title", content: "Courses — ArtSpace" },
+      { property: "og:description", content: "Online courses on digital art — cartoon, anime, game characters and pro tools." },
     ],
   }),
-  component: LearnPage,
+  component: CoursesPage,
 });
 
-const COURSES: RailItem[] = [
-  { img: learnCourse, title: "Digital Painting · Fundamentals", meta: "12 lessons · 4h 20m", tag: "Beginner" },
-  { img: art2, title: "Worldbuilding for Concept Artists", meta: "9 lessons · 6h 10m", tag: "Intermediate" },
-  { img: art5, title: "Hard-Surface Sculpting in ZBrush", meta: "14 lessons · 8h", tag: "Advanced" },
-  { img: art6, title: "Botanical Watercolor", meta: "8 lessons · 3h", tag: "Beginner" },
-  { img: art7, title: "Editorial Illustration", meta: "10 lessons · 5h", tag: "Intermediate" },
-  { img: art8, title: "Classical Oil Portrait", meta: "16 lessons · 11h", tag: "Advanced" },
+const CARTOON: RailItem[] = [
+  { img: learnCourse, title: "Cartoon Character Design · Fundamentals", meta: "By M. Reyes · 14 lessons · 5h 10m", tag: "Beginner" },
+  { img: art7, title: "Expressive Faces for Cartoons", meta: "By J. Disingana · 9 lessons · 3h 40m", tag: "Beginner" },
+  { img: art11, title: "Stylised Linework in Procreate", meta: "By Y. Tanaka · 11 lessons · 4h", tag: "Intermediate" },
+  { img: art12, title: "Cartoon Color Theory", meta: "By S. Vance · 8 lessons · 2h 50m", tag: "Beginner" },
 ];
 
-const CHALLENGES: RailItem[] = [
-  { img: gDoorway, title: "Doorways · 30 photos in 30 days", meta: "Ends in 12 days", tag: "Photo" },
-  { img: art6, title: "One Leaf a Day", meta: "Open · weekly prizes", tag: "Sketch" },
-  { img: art5, title: "Robot of the Week", meta: "Round 7 live", tag: "3D" },
-  { img: art2, title: "Skies of Another World", meta: "Ends in 4 days", tag: "Concept" },
-  { img: art7, title: "Pop Portraits", meta: "Voting open", tag: "Illustration" },
-  { img: gBronze, title: "Cast in Bronze", meta: "Submissions open", tag: "Sculpture" },
+const ANIME: RailItem[] = [
+  { img: art11, title: "Anime Character Design · Foundations", meta: "By Y. Tanaka · 16 lessons · 6h 20m", tag: "Beginner" },
+  { img: art17, title: "Anime Portraits in Clip Studio Paint", meta: "By S. Petrova · 12 lessons · 5h", tag: "Intermediate" },
+  { img: art12, title: "Dynamic Anime Poses & Anatomy", meta: "By K. Mori · 10 lessons · 4h 30m", tag: "Intermediate" },
+  { img: art2, title: "Shading & Cel Lighting", meta: "By Studio North · 9 lessons · 3h 20m", tag: "Intermediate" },
 ];
 
-const SCHOOLS: RailItem[] = [
-  { img: learnSchool, title: "Atelier Lumen", meta: "Paris · Classical + Digital", tag: "School" },
-  { img: learnStudio, title: "Northlight Academy", meta: "Stockholm · Illustration", tag: "School" },
-  { img: art5, title: "Studio Foundry", meta: "Berlin · 3D + Animation", tag: "Training" },
-  { img: gBronze, title: "Casa Bronze", meta: "Lisbon · Sculpture", tag: "Workshop" },
-  { img: art8, title: "The Painters' Hall", meta: "London · Oil & Figure", tag: "School" },
-  { img: art6, title: "Hana Atelier", meta: "Kyoto · Watercolor", tag: "Workshop" },
+const GAME: RailItem[] = [
+  { img: art5, title: "Game Character Design · Concept to Sheet", meta: "By Atelier Mech · 18 lessons · 8h 30m", tag: "Advanced" },
+  { img: art12, title: "Stylised 3D Characters in Blender", meta: "By K. Mori · 22 lessons · 11h", tag: "Advanced" },
+  { img: art5, title: "Hard-Surface Sculpting in ZBrush", meta: "By Atelier Mech · 14 lessons · 8h", tag: "Advanced" },
+  { img: art8, title: "Texturing for Games in Substance Painter", meta: "By Lighthouse Studios · 12 lessons · 6h", tag: "Intermediate" },
+  { img: art17, title: "Rigging & Posing Game Characters", meta: "By Foundry Animation · 10 lessons · 5h 40m", tag: "Advanced" },
 ];
 
-function LearnPage() {
+const TOOLS: RailItem[] = [
+  { img: learnCourse, title: "Photoshop for Digital Painters", meta: "16 lessons · 7h", tag: "Photoshop" },
+  { img: art11, title: "Procreate · Brushes & Workflow", meta: "12 lessons · 4h 30m", tag: "Procreate" },
+  { img: art12, title: "Blender · Modelling for Artists", meta: "20 lessons · 9h", tag: "Blender" },
+  { img: art5, title: "ZBrush · Sculpting Essentials", meta: "18 lessons · 8h 30m", tag: "ZBrush" },
+  { img: art17, title: "Clip Studio Paint for Comics", meta: "14 lessons · 5h 40m", tag: "CSP" },
+  { img: art8, title: "Substance Painter · PBR Texturing", meta: "10 lessons · 4h 20m", tag: "Substance" },
+];
+
+function CoursesPage() {
   const requireAuth = useRequireAuth();
   return (
     <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)]">
       <Header />
 
       <PageHero
-        eyebrow="Learn on ArtSpace"
+        eyebrow="Online Courses"
         icon={GraduationCap}
-        title={<>Build your craft, <span className="text-[var(--color-accent)]">one lesson</span> at a time.</>}
-        description="Self-paced courses taught by working artists, monthly challenges that sharpen your eye, and a directory of schools and training centers worldwide."
+        title={<>Learn digital art from <span className="text-[var(--color-accent)]">artists who ship</span>.</>}
+        description="Self-paced online courses taught by working digital artists — cartoon and anime character design, game characters and pipelines, and the professional tools used to make them: Photoshop, Procreate, Blender, ZBrush, Clip Studio Paint and Substance Painter."
         cta={{
           label: "Start a free lesson",
           onClick: () => requireAuth(() => {
             toast.success("Lesson unlocked — heading to your first class.");
-            document.getElementById("learning")?.scrollIntoView({ behavior: "smooth" });
+            document.getElementById("cartoon")?.scrollIntoView({ behavior: "smooth" });
           }, "start a lesson"),
         }}
       />
 
-      {/* Feature row */}
       <section className="mx-auto max-w-[1400px] px-4 lg:px-6 pb-12">
         <div className="grid lg:grid-cols-3 gap-4">
           {[
-            { icon: PlayCircle, k: "240+", v: "Courses across mediums" },
-            { icon: Trophy, k: "12", v: "Live monthly challenges" },
-            { icon: School, k: "180", v: "Partner schools & studios" },
+            { icon: PlayCircle, k: "320+", v: "Online courses across digital mediums" },
+            { icon: Users, k: "65k", v: "Students learning this month" },
+            { icon: Sparkles, k: "9", v: "Pro tools covered, from PS to ZBrush" },
           ].map((s) => (
             <div key={s.v} className="card-surface p-5 flex items-center gap-4">
-              <span
-                className="h-10 w-10 rounded-lg grid place-items-center"
-                style={{ background: "color-mix(in oklab, var(--color-accent) 18%, transparent)" }}
-              >
+              <span className="h-10 w-10 rounded-lg grid place-items-center" style={{ background: "color-mix(in oklab, var(--color-accent) 18%, transparent)" }}>
                 <s.icon className="h-4 w-4 text-[var(--color-accent)]" />
               </span>
               <div>
@@ -102,21 +101,31 @@ function LearnPage() {
         </div>
       </section>
 
-      <div id="learning">
-        <HorizontalRail title="Featured Courses" subtitle="Taught by working professionals." items={COURSES} />
+      <div id="cartoon">
+        <HorizontalRail title="Cartoon Character Making" subtitle="From thumbnail to finished cartoon character." items={CARTOON} />
+      </div>
+
+      <div id="anime">
+        <HorizontalRail title="Anime Character Making" subtitle="Anime design, anatomy, linework and cel shading." items={ANIME} />
+      </div>
+
+      <div id="game">
+        <HorizontalRail title="Game Character Making" subtitle="2D and 3D pipelines for production-ready characters." items={GAME} />
+      </div>
+
+      <div id="tools">
+        <HorizontalRail title="Professional Digital Tools" subtitle="Master the software working artists actually use." items={TOOLS} />
       </div>
 
       {/* Spotlight */}
       <section className="mx-auto max-w-[1400px] px-4 lg:px-6 pb-16">
-        <div
-          className="card-surface overflow-hidden grid md:grid-cols-2"
-        >
-          <img src={learnStudio} alt="Inside a learning studio" loading="lazy" className="h-64 md:h-full w-full object-cover" />
+        <div className="card-surface overflow-hidden grid md:grid-cols-2">
+          <img src={learnStudio} alt="Inside an online studio" loading="lazy" className="h-64 md:h-full w-full object-cover" />
           <div className="p-6 lg:p-8 flex flex-col justify-center gap-3">
             <span className="text-xs uppercase tracking-wider text-[var(--color-muted-foreground)]">Spotlight</span>
             <h3 className="text-2xl font-semibold tracking-tight">A studio of your own.</h3>
             <p className="text-sm text-[var(--color-muted-foreground)] leading-relaxed">
-              Every Learning subscription includes a private workspace, peer reviews, and live office hours with mentors.
+              Every Courses subscription includes a private online workspace, peer reviews, and live office hours with mentors.
             </p>
             <div className="flex items-center gap-5 text-xs text-[var(--color-muted-foreground)] mt-2">
               <span className="inline-flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" /> Self-paced</span>
@@ -130,13 +139,21 @@ function LearnPage() {
         </div>
       </section>
 
-      <div id="challenges">
-        <HorizontalRail title="Open Challenges" subtitle="Weekly prompts judged by guest artists." items={CHALLENGES} />
-      </div>
-
-      <div id="schools">
-        <HorizontalRail title="Schools & Training Centers" subtitle="Find a program near you." items={SCHOOLS} />
-      </div>
+      {/* Pointer to physical schools */}
+      <section className="mx-auto max-w-[1400px] px-4 lg:px-6 pb-20">
+        <Link to="/schools" className="card-surface p-6 group flex items-center justify-between gap-4 hover:border-[var(--color-accent)] transition-colors">
+          <div className="flex items-start gap-4">
+            <span className="h-10 w-10 rounded-lg grid place-items-center" style={{ background: "color-mix(in oklab, var(--color-accent) 18%, transparent)" }}>
+              <School className="h-4 w-4 text-[var(--color-accent)]" />
+            </span>
+            <div>
+              <h3 className="text-base font-semibold">Looking for hands-on training?</h3>
+              <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">Browse in-person schools and workshops for painting, drawing, photography and sculpture.</p>
+            </div>
+          </div>
+          <span className="text-sm text-[var(--color-accent)] group-hover:translate-x-1 transition-transform">Schools →</span>
+        </Link>
+      </section>
 
       <Footer />
       <ScrollToTop />

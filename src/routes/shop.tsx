@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ShoppingBag, Tag, Frame, Sparkles } from "lucide-react";
+import { ShoppingBag, Wrench, Palette as PaletteIcon, Sparkles } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ScrollToTop } from "@/components/site/ScrollToTop";
@@ -24,41 +24,42 @@ export const Route = createFileRoute("/shop")({
   head: () => ({
     meta: [
       { title: "Shop — ArtSpace" },
-      { name: "description", content: "Marketplace and limited-edition prints from artists you love." },
+      { name: "description", content: "Buy the tools artists actually use — brushes, painting boards, paints, cameras and lenses — and shop original arts: paintings, drawings and photographs." },
       { property: "og:title", content: "Shop — ArtSpace" },
-      { property: "og:description", content: "Marketplace and limited-edition prints from artists you love." },
+      { property: "og:description", content: "Tools and Arts Sales — supplies for makers and original works from artists." },
     ],
   }),
   component: ShopPage,
 });
 
-const MARKETPLACE: RailItem[] = [
-  { img: gFigure, title: "Figure in Ochre · Original", meta: "$3,200 · 60×80cm", tag: "Original" },
-  { img: art1, title: "Atlantic Blue · Original", meta: "$2,400 · 70×90cm", tag: "Original" },
-  { img: gCollage, title: "Paper Memory · Original", meta: "$1,150 · 40×50cm", tag: "Original" },
-  { img: art2, title: "Floating Quiet · Open Edition", meta: "$120 · digital", tag: "Digital" },
-  { img: art4, title: "Alley, 3am · Print", meta: "$240 · A2", tag: "Print" },
-  { img: shopSupplies, title: "Atelier Starter Pack", meta: "$89 · bundle", tag: "Supplies" },
-  { img: art6, title: "Botanical Set of 3", meta: "$210 · framed", tag: "Bundle" },
-  { img: work1, title: "Monolith · Studio Edition", meta: "$640 · A1", tag: "Print" },
+// Tools used by artists — brushes, boards, paints, cameras, lenses, etc.
+const TOOLS: RailItem[] = [
+  { img: shopSupplies, title: "Sable Brush Set · 6", meta: "$72 · brushes", tag: "Brushes" },
+  { img: shopSupplies, title: "Atelier Watercolor Set · 24", meta: "$54 · paints", tag: "Paints" },
+  { img: shopSupplies, title: "Birch Painting Board · A2", meta: "$38 · boards", tag: "Boards" },
+  { img: shopSupplies, title: "Studio Easel · Beechwood", meta: "$210 · studio", tag: "Studio" },
+  { img: shopSupplies, title: "Mirrorless Camera · 24MP", meta: "$1,290 · camera", tag: "Cameras" },
+  { img: shopSupplies, title: "Prime Lens · 35mm f/1.8", meta: "$420 · lens", tag: "Lenses" },
+  { img: shopSupplies, title: "Linen Sketchbook · A4", meta: "$28 · paper", tag: "Paper" },
+  { img: shopSupplies, title: "Archival Ink · 100ml", meta: "$22 · ink", tag: "Ink" },
+  { img: shopSupplies, title: "Conté Crayon · Set of 12", meta: "$36 · drawing", tag: "Drawing" },
+  { img: shopSupplies, title: "Graphics Tablet · 13\" Pen Display", meta: "$640 · digital", tag: "Tablets" },
 ];
 
-const PRINTS: RailItem[] = [
-  { img: shopPrint, title: "Quiet Tree", meta: "$95 · 50×70 · /200", tag: "Limited" },
-  { img: work2, title: "Plains at Dusk", meta: "$140 · 60×80 · /150", tag: "Limited" },
-  { img: gDoorway, title: "Doorway, Lisbon", meta: "$110 · 40×60 · /250", tag: "Photo" },
-  { img: art7, title: "Halftone Bloom", meta: "$80 · 30×40 · open", tag: "Open" },
-  { img: art8, title: "The Fisherman", meta: "$160 · 50×70 · /100", tag: "Limited" },
-  { img: art6, title: "Botanical I", meta: "$60 · 30×30 · open", tag: "Open" },
-];
-
-const SUPPLIES: RailItem[] = [
-  { img: shopSupplies, title: "Atelier Watercolor Set · 24", meta: "$54", tag: "Supplies" },
-  { img: shopSupplies, title: "Sable Brush Set · 6", meta: "$72", tag: "Brushes" },
-  { img: shopSupplies, title: "Linen Sketchbook · A4", meta: "$28", tag: "Paper" },
-  { img: shopSupplies, title: "Studio Easel · Beechwood", meta: "$210", tag: "Studio" },
-  { img: shopSupplies, title: "Archival Ink · 100ml", meta: "$22", tag: "Ink" },
-  { img: shopSupplies, title: "Conté Crayon · Set of 12", meta: "$36", tag: "Drawing" },
+// Arts Sales — original paintings, drawings, photographs and prints from artists
+const ARTS: RailItem[] = [
+  { img: gFigure, title: "Figure in Ochre · Original Painting", meta: "$3,200 · 60×80cm", tag: "Painting" },
+  { img: art1, title: "Atlantic Blue · Original Painting", meta: "$2,400 · 70×90cm", tag: "Painting" },
+  { img: gCollage, title: "Paper Memory · Original", meta: "$1,150 · 40×50cm", tag: "Mixed" },
+  { img: art2, title: "Floating Quiet · Open Edition", meta: "$120 · digital print", tag: "Digital" },
+  { img: art4, title: "Alley, 3am · Photograph", meta: "$240 · A2", tag: "Photography" },
+  { img: gDoorway, title: "Doorway, Lisbon · Photograph", meta: "$340 · A2 · /250", tag: "Photography" },
+  { img: art6, title: "Botanical Study · Drawing", meta: "$210 · framed", tag: "Drawing" },
+  { img: work1, title: "Monolith · Studio Edition", meta: "$640 · A1 print", tag: "Print" },
+  { img: shopPrint, title: "Quiet Tree · Limited Print", meta: "$95 · 50×70 · /200", tag: "Print" },
+  { img: work2, title: "Plains at Dusk · Limited Print", meta: "$140 · 60×80 · /150", tag: "Print" },
+  { img: art7, title: "Halftone Bloom · Open Print", meta: "$80 · 30×40", tag: "Print" },
+  { img: art8, title: "The Fisherman · Limited Print", meta: "$160 · 50×70 · /100", tag: "Print" },
 ];
 
 function ShopPage() {
@@ -69,8 +70,8 @@ function ShopPage() {
       <PageHero
         eyebrow="Shop ArtSpace"
         icon={ShoppingBag}
-        title={<>Buy work that <span className="text-[var(--color-accent)]">starts a conversation</span>.</>}
-        description="Originals from the marketplace, signed limited prints, and the supplies artists actually use in their studios — shipped worldwide."
+        title={<>Buy the <span className="text-[var(--color-accent)]">tools</span> — own the <span className="text-[var(--color-accent)]">art</span>.</>}
+        description="Two shops in one. Tools the artists actually use — brushes, boards, paints, cameras, lenses — and Arts Sales: original paintings, drawings and photographs from the makers themselves."
       />
 
       {/* Promo bar */}
@@ -82,51 +83,63 @@ function ShopPage() {
               "linear-gradient(120deg, color-mix(in oklab, var(--color-accent) 12%, var(--color-surface)), var(--color-surface))",
           }}
         >
-          <span
-            className="badge"
-            style={{ background: "var(--color-badge-sale)", color: "#fff" }}
-          >
+          <span className="badge" style={{ background: "var(--color-badge-sale)", color: "#fff" }}>
             Sale
           </span>
           <div className="flex-1">
-            <div className="text-sm font-semibold">Spring Marketplace · up to 30% off select originals</div>
+            <div className="text-sm font-semibold">Spring sale · up to 30% off select tools and arts</div>
             <div className="text-xs text-[var(--color-muted-foreground)] mt-0.5">Ends Sunday. Free shipping on orders over $250.</div>
           </div>
-          <a href="#marketplace" className="btn btn-cta px-4 py-2 text-sm">Shop the sale</a>
+          <a href="#tools" className="btn btn-cta px-4 py-2 text-sm">Shop the sale</a>
         </div>
       </section>
 
-      <div id="marketplace">
-        <HorizontalRail title="Marketplace" subtitle="Originals from artists you've been following." items={MARKETPLACE} />
-      </div>
-
       {/* Categories */}
       <section className="mx-auto max-w-[1400px] px-4 lg:px-6 pb-12">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid sm:grid-cols-2 gap-4">
+          <a href="#tools" className="card-surface p-5 hover:border-[var(--color-accent)] transition-colors">
+            <span className="h-9 w-9 rounded-lg grid place-items-center mb-4" style={{ background: "color-mix(in oklab, var(--color-accent) 18%, transparent)" }}>
+              <Wrench className="h-4 w-4 text-[var(--color-accent)]" />
+            </span>
+            <h3 className="text-base font-semibold">Tools</h3>
+            <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">Brushes, painting boards, paints, cameras, lenses, tablets and more — the kit working artists reach for.</p>
+          </a>
+          <a href="#arts" className="card-surface p-5 hover:border-[var(--color-accent)] transition-colors">
+            <span className="h-9 w-9 rounded-lg grid place-items-center mb-4" style={{ background: "color-mix(in oklab, var(--color-accent) 18%, transparent)" }}>
+              <PaletteIcon className="h-4 w-4 text-[var(--color-accent)]" />
+            </span>
+            <h3 className="text-base font-semibold">Arts Sales</h3>
+            <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">Original paintings, drawings, photographs and signed limited prints — shipped worldwide.</p>
+          </a>
+        </div>
+      </section>
+
+      <div id="tools">
+        <HorizontalRail title="Tools" subtitle="Brushes, boards, paints, cameras, lenses — used by working artists." items={TOOLS} />
+      </div>
+
+      <div id="arts">
+        <HorizontalRail title="Arts Sales" subtitle="Paintings, drawings, photographs and prints — direct from the artist." items={ARTS} />
+      </div>
+
+      {/* Trust strip */}
+      <section className="mx-auto max-w-[1400px] px-4 lg:px-6 pb-20">
+        <div className="grid sm:grid-cols-3 gap-4">
           {[
-            { icon: Frame, title: "Limited Prints", desc: "Signed, numbered editions." },
-            { icon: Tag, title: "Open Editions", desc: "Always-available prints from $60." },
-            { icon: Sparkles, title: "Studio Supplies", desc: "The kit your favorite artists use." },
-          ].map((c) => (
-            <div key={c.title} className="card-surface p-5 hover:border-[var(--color-accent)] transition-colors">
-              <span
-                className="h-9 w-9 rounded-lg grid place-items-center mb-4"
-                style={{ background: "color-mix(in oklab, var(--color-accent) 18%, transparent)" }}
-              >
-                <c.icon className="h-4 w-4 text-[var(--color-accent)]" />
+            { icon: Sparkles, t: "Vetted makers", d: "Every artist and supplier is reviewed." },
+            { icon: Wrench, t: "Tested tools", d: "We use what we sell — and recommend honestly." },
+            { icon: PaletteIcon, t: "Direct from the artist", d: "Original works ship from the studio that made them." },
+          ].map((b) => (
+            <div key={b.t} className="card-surface p-5">
+              <span className="h-9 w-9 rounded-lg grid place-items-center mb-3" style={{ background: "color-mix(in oklab, var(--color-accent) 18%, transparent)" }}>
+                <b.icon className="h-4 w-4 text-[var(--color-accent)]" />
               </span>
-              <h3 className="text-base font-semibold">{c.title}</h3>
-              <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">{c.desc}</p>
+              <h4 className="font-semibold">{b.t}</h4>
+              <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">{b.d}</p>
             </div>
           ))}
         </div>
       </section>
-
-      <div id="prints">
-        <HorizontalRail title="Limited & Open Prints" subtitle="Museum-grade paper, archival inks." items={PRINTS} />
-      </div>
-
-      <HorizontalRail title="Studio Supplies" subtitle="Brushes, paper and pigments." items={SUPPLIES} />
 
       <Footer />
       <ScrollToTop />

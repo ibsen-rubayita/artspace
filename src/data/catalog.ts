@@ -79,9 +79,13 @@ export const CATEGORIES: Category[] = [
 export const PAGES = [
   { title: "Home", to: "/", desc: "ArtSpace landing page" },
   { title: "Gallery", to: "/gallery", desc: "Browse all artworks" },
-  { title: "Explore", to: "/explore", desc: "Magazine, blogs and curated picks" },
-  { title: "Learn", to: "/learn", desc: "Courses, challenges and schools" },
-  { title: "Shop", to: "/shop", desc: "Marketplace and prints" },
-  { title: "Find a Job", to: "/jobs", desc: "Open roles at studios" },
-  { title: "Hire a Studio", to: "/hire", desc: "Post a brief and find artists" },
+  { title: "Explore", to: "/explore", desc: "Gallery, blogs and magazine" },
+  { title: "Blogs", to: "/blogs", desc: "Stories from artists about their work" },
+  { title: "Magazine", to: "/magazine", desc: "ArtSpace Magazine — long reads and studio visits" },
+  { title: "Courses", to: "/learn", desc: "Online courses on digital art and pro tools" },
+  { title: "Schools", to: "/schools", desc: "In-person schools and training centers" },
+  { title: "Shop", to: "/shop", desc: "Tools and Arts Sales" },
+  { title: "Network", to: "/network", desc: "Jobs and hiring in one place" },
+  { title: "Jobs", to: "/jobs", desc: "Open roles at studios" },
+  { title: "Hiring", to: "/hire", desc: "Post a brief and find artists" },
 ];
