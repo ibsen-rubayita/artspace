@@ -10,6 +10,7 @@ import hireStudio from "@/assets/hire-studio.jpg";
 import hireArtist from "@/assets/hire-artist.jpg";
 import jobsTeam from "@/assets/jobs-team.jpg";
 import learnStudio from "@/assets/learn-studio.jpg";
+import heroNetwork from "@/assets/hero-network.jpg";
 import art2 from "@/assets/art-2.jpg";
 import art5 from "@/assets/art-5.jpg";
 import art7 from "@/assets/art-7.jpg";
