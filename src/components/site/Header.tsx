@@ -25,34 +25,23 @@ const NAV: NavItem[] = [
     to: "/explore",
     items: [
       { label: "Gallery", to: "/gallery" },
-      { label: "Blogs", to: "/blogs" },
-      { label: "Magazine", to: "/magazine" },
+      { label: "Blogs & Magazine", to: "/blogs" },
     ],
   },
   {
-    label: "Courses",
-    to: "/learn",
+    label: "Learning",
+    to: "/learning",
     items: [
-      { label: "Cartoon Characters", to: "/learn", hash: "cartoon" },
-      { label: "Anime Characters", to: "/learn", hash: "anime" },
-      { label: "Game Characters", to: "/learn", hash: "game" },
-      { label: "Professional Tools", to: "/learn", hash: "tools" },
-    ],
-  },
-  {
-    label: "Schools",
-    to: "/schools",
-    items: [
-      { label: "Schools & Ateliers", to: "/schools" },
-      { label: "Residencies", to: "/schools", hash: "residencies" },
+      { label: "Online Courses", to: "/learn" },
+      { label: "Schools & Training", to: "/schools" },
     ],
   },
   {
     label: "Shop",
-    to: "/shop",
+    to: "/tools",
     items: [
-      { label: "Tools", to: "/shop", hash: "tools", badge: "SALE" },
-      { label: "Arts Sales", to: "/shop", hash: "arts", badge: "NEW" },
+      { label: "Tools", to: "/tools", badge: "SALE" },
+      { label: "Arts Sales", to: "/arts", badge: "NEW" },
     ],
   },
   {
