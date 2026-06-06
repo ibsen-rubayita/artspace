@@ -10,18 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ToolsRouteImport } from './routes/tools'
+import { Route as ArtsRouteImport } from './routes/arts'
+import { Route as LearningRouteImport } from './routes/learning'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as SchoolsRouteImport } from './routes/schools'
 import { Route as NetworkRouteImport } from './routes/network'
 import { Route as MagazineRouteImport } from './routes/magazine'
-import { Route as LearningRouteImport } from './routes/learning'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as HireRouteImport } from './routes/hire'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as BlogsRouteImport } from './routes/blogs'
-import { Route as ArtsRouteImport } from './routes/arts'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
@@ -30,6 +30,16 @@ import { Route as ApiPublicNotifyRouteImport } from './routes/api/public/notify'
 const ToolsRoute = ToolsRouteImport.update({
   id: '/tools',
   path: '/tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArtsRoute = ArtsRouteImport.update({
+  id: '/arts',
+  path: '/arts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearningRoute = LearningRouteImport.update({
+  id: '/learning',
+  path: '/learning',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShopRoute = ShopRouteImport.update({
@@ -50,11 +60,6 @@ const NetworkRoute = NetworkRouteImport.update({
 const MagazineRoute = MagazineRouteImport.update({
   id: '/magazine',
   path: '/magazine',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LearningRoute = LearningRouteImport.update({
-  id: '/learning',
-  path: '/learning',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LearnRoute = LearnRouteImport.update({
@@ -85,11 +90,6 @@ const ExploreRoute = ExploreRouteImport.update({
 const BlogsRoute = BlogsRouteImport.update({
   id: '/blogs',
   path: '/blogs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ArtsRoute = ArtsRouteImport.update({
-  id: '/arts',
-  path: '/arts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -254,6 +254,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/arts': {
+      id: '/arts'
+      path: '/arts'
+      fullPath: '/arts'
+      preLoaderRoute: typeof ArtsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learning': {
+      id: '/learning'
+      path: '/learning'
+      fullPath: '/learning'
+      preLoaderRoute: typeof LearningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shop': {
       id: '/shop'
       path: '/shop'
@@ -280,13 +294,6 @@ declare module '@tanstack/react-router' {
       path: '/magazine'
       fullPath: '/magazine'
       preLoaderRoute: typeof MagazineRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learning': {
-      id: '/learning'
-      path: '/learning'
-      fullPath: '/learning'
-      preLoaderRoute: typeof LearningRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learn': {
@@ -329,13 +336,6 @@ declare module '@tanstack/react-router' {
       path: '/blogs'
       fullPath: '/blogs'
       preLoaderRoute: typeof BlogsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/arts': {
-      id: '/arts'
-      path: '/arts'
-      fullPath: '/arts'
-      preLoaderRoute: typeof ArtsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
