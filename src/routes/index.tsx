@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowRight, Sparkles, Briefcase, Palette, Building2 } from "lucide-react";
+import { ArrowRight, Sparkles, Briefcase, Palette, Building2, GraduationCap, Wrench, Newspaper, Network as NetworkIcon } from "lucide-react";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ScrollToTop } from "@/components/site/ScrollToTop";
