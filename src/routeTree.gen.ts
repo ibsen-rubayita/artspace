@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ToolsRouteImport } from './routes/tools'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as SchoolsRouteImport } from './routes/schools'
 import { Route as NetworkRouteImport } from './routes/network'
@@ -25,6 +26,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as ApiPublicNotifyRouteImport } from './routes/api/public/notify'
 
+const ToolsRoute = ToolsRouteImport.update({
+  id: '/tools',
+  path: '/tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/network': typeof NetworkRoute
   '/schools': typeof SchoolsRoute
   '/shop': typeof ShopRoute
+  '/tools': typeof ToolsRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/api/public/notify': typeof ApiPublicNotifyRoute
 }
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/network': typeof NetworkRoute
   '/schools': typeof SchoolsRoute
   '/shop': typeof ShopRoute
+  '/tools': typeof ToolsRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/api/public/notify': typeof ApiPublicNotifyRoute
 }
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/network': typeof NetworkRoute
   '/schools': typeof SchoolsRoute
   '/shop': typeof ShopRoute
+  '/tools': typeof ToolsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/api/public/notify': typeof ApiPublicNotifyRoute
 }
@@ -165,6 +174,7 @@ export interface FileRouteTypes {
     | '/network'
     | '/schools'
     | '/shop'
+    | '/tools'
     | '/profile'
     | '/api/public/notify'
   fileRoutesByTo: FileRoutesByTo
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/network'
     | '/schools'
     | '/shop'
+    | '/tools'
     | '/profile'
     | '/api/public/notify'
   id:
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/network'
     | '/schools'
     | '/shop'
+    | '/tools'
     | '/_authenticated/profile'
     | '/api/public/notify'
   fileRoutesById: FileRoutesById
@@ -216,11 +228,19 @@ export interface RootRouteChildren {
   NetworkRoute: typeof NetworkRoute
   SchoolsRoute: typeof SchoolsRoute
   ShopRoute: typeof ShopRoute
+  ToolsRoute: typeof ToolsRoute
   ApiPublicNotifyRoute: typeof ApiPublicNotifyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tools': {
+      id: '/tools'
+      path: '/tools'
+      fullPath: '/tools'
+      preLoaderRoute: typeof ToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shop': {
       id: '/shop'
       path: '/shop'
@@ -354,6 +374,7 @@ const rootRouteChildren: RootRouteChildren = {
   NetworkRoute: NetworkRoute,
   SchoolsRoute: SchoolsRoute,
   ShopRoute: ShopRoute,
+  ToolsRoute: ToolsRoute,
   ApiPublicNotifyRoute: ApiPublicNotifyRoute,
 }
 export const routeTree = rootRouteImport
