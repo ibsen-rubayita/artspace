@@ -10,6 +10,7 @@ import { toast } from "sonner";
 
 import learnStudio from "@/assets/learn-studio.jpg";
 import learnCourse from "@/assets/learn-course.jpg";
+import heroLearning from "@/assets/hero-learning.jpg";
 import art2 from "@/assets/art-2.jpg";
 import art5 from "@/assets/art-5.jpg";
 import art7 from "@/assets/art-7.jpg";
