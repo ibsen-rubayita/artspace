@@ -8,10 +8,6 @@ import {
   ChevronDown,
   LogOut,
   User as UserIcon,
-  Compass,
-  GraduationCap,
-  ShoppingBag,
-  Network as NetworkIcon,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "@/hooks/use-theme";
@@ -20,14 +16,13 @@ import { GlobalSearch } from "@/components/site/GlobalSearch";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-type SubLink = { label: string; to: string; badge?: "SALE" | "NEW" };
-type NavItem = { label: string; to: string; icon: React.ElementType; items: SubLink[] };
+type SubLink = { label: string; to: string; hash?: string; badge?: "SALE" | "NEW" };
+type NavItem = { label: string; to: string; items: SubLink[] };
 
 const NAV: NavItem[] = [
   {
     label: "Explore",
     to: "/explore",
-    icon: Compass,
     items: [
       { label: "Gallery", to: "/gallery" },
       { label: "Blogs & Magazine", to: "/blogs" },
@@ -36,16 +31,14 @@ const NAV: NavItem[] = [
   {
     label: "Learning",
     to: "/learning",
-    icon: GraduationCap,
     items: [
       { label: "Online Courses", to: "/learn" },
-      { label: "Schools & Training", to: "/schools" },
+      { label: "Schools", to: "/schools" },
     ],
   },
   {
     label: "Shop",
     to: "/tools",
-    icon: ShoppingBag,
     items: [
       { label: "Tools", to: "/tools", badge: "SALE" },
       { label: "Arts Sales", to: "/arts", badge: "NEW" },
@@ -54,7 +47,6 @@ const NAV: NavItem[] = [
   {
     label: "Network",
     to: "/network",
-    icon: NetworkIcon,
     items: [
       { label: "Jobs", to: "/jobs" },
       { label: "Hiring", to: "/hire" },
@@ -62,18 +54,13 @@ const NAV: NavItem[] = [
   },
 ];
 
-function BadgePill({ kind }: { kind: "SALE" | "NEW" }) {
+function Badge({ kind }: { kind: "SALE" | "NEW" }) {
   return (
     <span
+      className="badge ml-2"
       style={{
         background: kind === "SALE" ? "var(--color-badge-sale)" : "var(--color-badge-new)",
         color: "#fff",
-        fontSize: "0.6rem",
-        fontWeight: 700,
-        letterSpacing: "0.05em",
-        padding: "0.1rem 0.45rem",
-        borderRadius: 999,
-        textTransform: "uppercase",
       }}
     >
       {kind}
@@ -83,8 +70,26 @@ function BadgePill({ kind }: { kind: "SALE" | "NEW" }) {
 
 function Logo() {
   return (
-    <Link to="/" className="select-none text-[1.15rem] font-semibold tracking-tight leading-none" style={{ color: "var(--color-foreground)" }}>
-      Art<span style={{ color: "var(--color-accent)" }}>Space</span>
+    <Link
+      to="/"
+      className="select-none text-[1.15rem] font-semibold tracking-tight leading-none"
+      aria-label="ArtSpace — home"
+    >
+      Art<span className="text-[var(--color-accent)]">Space</span>
+    </Link>
+  );
+}
+
+function SubItem({ s, onClick }: { s: SubLink; onClick?: () => void }) {
+  return (
+    <Link
+      to={s.to}
+      hash={s.hash}
+      onClick={onClick}
+      className="flex items-center justify-between px-3 py-2 text-sm hover:bg-[var(--color-surface-2)] transition-colors"
+    >
+      <span>{s.label}</span>
+      {s.badge && <Badge kind={s.badge} />}
     </Link>
   );
 }
@@ -92,43 +97,50 @@ function Logo() {
 function NavDropdown({ item }: { item: NavItem }) {
   const [open, setOpen] = useState(false);
   const timer = useRef<number | null>(null);
-  const onEnter = () => { if (timer.current) clearTimeout(timer.current); setOpen(true); };
-  const onLeave = () => { timer.current = window.setTimeout(() => setOpen(false), 120); };
-  const Icon = item.icon;
+
+  const onEnter = () => {
+    if (timer.current) window.clearTimeout(timer.current);
+    setOpen(true);
+  };
+  const onLeave = () => {
+    timer.current = window.setTimeout(() => setOpen(false), 120);
+  };
 
   return (
     <div className="relative" onMouseEnter={onEnter} onMouseLeave={onLeave}>
       <Link
         to={item.to}
-        className="inline-flex items-center gap-1 text-sm px-2 py-2"
-        style={{ color: "var(--color-foreground)", opacity: 0.85 }}
-        activeProps={{ style: { color: "var(--color-accent)", opacity: 1 } }}
+        className="nav-link inline-flex items-center gap-1 text-sm px-2 py-2"
+        data-open={open}
+        activeProps={{ className: "nav-link inline-flex items-center gap-1 text-sm px-2 py-2 !text-[var(--color-accent)] !opacity-100" }}
       >
-        <Icon className="h-3.5 w-3.5" />
         {item.label}
         <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", open && "rotate-180")} />
       </Link>
       {open && (
-        <div
-          className="absolute left-0 top-full mt-2 min-w-[220px] py-2 z-50 rounded-lg border"
-          style={{ background: "var(--color-popover)", borderColor: "var(--color-border)", boxShadow: "0 10px 30px -10px rgba(0,0,0,0.45)" }}
-        >
-          {item.items.map((s) => (
-            <Link
-              key={s.label}
-              to={s.to}
-              className="flex items-center justify-between px-3 py-2 text-sm transition-colors"
-              style={{ color: "var(--color-foreground)" }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-surface-2)")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-            >
-              <span>{s.label}</span>
-              {s.badge && <BadgePill kind={s.badge} />}
-            </Link>
-          ))}
+        <div className="dropdown-panel animate-dropdown absolute left-0 top-full mt-2 min-w-[240px] py-2 z-50">
+          {item.items.map((s) => <SubItem key={s.label} s={s} />)}
         </div>
       )}
     </div>
+  );
+}
+
+function SearchTrigger({ onOpen, className }: { onOpen: () => void; className?: string }) {
+  return (
+    <button
+      onClick={onOpen}
+      className={cn(
+        "relative w-full max-w-[340px] flex items-center h-9 rounded-lg border px-3 bg-[var(--color-surface)] text-left hover:border-[var(--color-accent)] transition-colors",
+        className,
+      )}
+      style={{ borderColor: "var(--color-border)" }}
+      aria-label="Open search"
+    >
+      <Search className="h-4 w-4 text-[var(--color-muted-foreground)] shrink-0" />
+      <span className="px-2 text-sm text-[var(--color-muted-foreground)] flex-1">Search ArtSpace</span>
+      <kbd className="hidden sm:inline-block text-[10px] px-1.5 py-0.5 rounded border" style={{ borderColor: "var(--color-border)" }}>⌘K</kbd>
+    </button>
   );
 }
 
@@ -138,17 +150,14 @@ function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label="Toggle theme"
-      className="h-10 w-10 grid place-items-center rounded-lg transition-all duration-200"
-      style={{ border: "1px solid var(--color-border)", color: "var(--color-foreground)" }}
-      onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "var(--color-surface)"; (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--color-accent)"; }}
-      onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = ""; (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--color-border)"; }}
+      className="h-10 w-10 grid place-items-center rounded-lg border hover:bg-[var(--color-surface)] hover:border-[var(--color-accent)] transition-all duration-200"
+      style={{ borderColor: "var(--color-border)" }}
     >
-      {theme === "dark" ? <Sun className="h-[1.1rem] w-[1.1rem]" /> : <Moon className="h-[1.1rem] w-[1.1rem]" />}
+      {theme === "dark" ? <Sun className="h-[1.15rem] w-[1.15rem]" /> : <Moon className="h-[1.15rem] w-[1.15rem]" />}
     </button>
   );
 }
 
-// ─── SIDEBAR DRAWER ────────────────────────────────────────────────────────────
 function MobileDrawer({
   open,
   onClose,
@@ -166,220 +175,147 @@ function MobileDrawer({
   user: ReturnType<typeof useAuth>["user"];
   onSignOut: () => void;
 }) {
-  const [expandedItem, setExpandedItem] = useState<string | null>(null);
-
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
+
+  const toggleSection = (label: string) => {
+    setExpandedSections((current) => ({
+      ...current,
+      [label]: !current[label],
+    }));
+  };
+
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] lg:hidden">
-      {/* Backdrop */}
+    <div className="fixed inset-0 z-[9999] lg:hidden">
       <div
         className="absolute inset-0"
-        style={{ background: "rgba(0,0,0,0.65)" }}
+        style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
         onClick={onClose}
       />
-
-      {/* Sidebar panel */}
       <aside
-        className="absolute left-0 top-0 h-full w-[82%] max-w-[320px] flex flex-col animate-drawer"
-        style={{
-          background: "var(--color-background)",
-          borderRight: "1px solid var(--color-border)",
-        }}
+        className="fixed top-0 left-0 z-[9999] flex h-screen w-[82%] max-w-[320px] flex-col border-r border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)]"
       >
-
-        {/* ── HEADER: logo + close ── */}
-        <div
-          className="flex items-center justify-between px-4 h-14 shrink-0"
-          style={{ borderBottom: "1px solid var(--color-border)" }}
-        >
+        <div className="flex items-center justify-between gap-2 px-4 py-4 border-b border-[var(--color-border)]">
           <Logo />
-          <button
-            onClick={onClose}
-            aria-label="Close menu"
-            className="h-8 w-8 grid place-items-center rounded-lg transition-colors"
-            style={{ color: "var(--color-muted-foreground)" }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-surface)")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-
-        {/* ── ① SEARCH BAR ── */}
-        <div className="px-3 pt-4 pb-3 shrink-0">
-          <button
-            onClick={() => { onClose(); onOpenSearch(); }}
-            className="w-full flex items-center gap-2 h-10 px-3 rounded-lg text-sm transition-colors"
-            style={{
-              background: "var(--color-surface)",
-              border: "1px solid var(--color-border)",
-              color: "var(--color-muted-foreground)",
-            }}
-          >
-            <Search className="h-4 w-4 shrink-0" />
-            <span className="flex-1 text-left">Search ArtSpace</span>
-            <kbd
-              className="text-[10px] px-1.5 py-0.5 rounded"
-              style={{ border: "1px solid var(--color-border)", background: "var(--color-background)" }}
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              onClick={onClose}
+              aria-label="Close menu"
+              className="h-10 w-10 grid place-items-center rounded-lg border border-[var(--color-border)] hover:bg-[var(--color-surface)] transition-colors"
             >
-              ⌘K
-            </kbd>
-          </button>
+              <X className="h-5 w-5 text-[var(--color-foreground)]" />
+            </button>
+          </div>
         </div>
 
-        {/* Divider */}
-        <div className="mx-3 mb-2" style={{ height: 1, background: "var(--color-border)" }} />
+        <div className="px-4 py-4">
+          <SearchTrigger
+            onOpen={() => {
+              onClose();
+              onOpenSearch();
+            }}
+            className="w-full max-w-full"
+          />
+        </div>
 
-        {/* ── ② NAVIGATION LINKS ── */}
-        <nav className="flex-1 overflow-y-auto px-3 pb-2">
-
-          <p
-            className="px-2 mb-2 text-[10px] font-semibold uppercase tracking-widest"
-            style={{ color: "var(--color-muted-foreground)" }}
-          >
-            Navigation
-          </p>
-
-          {NAV.map((item) => {
-            const isOpen = expandedItem === item.label;
-            const Icon = item.icon;
-
-            return (
-              <div key={item.label} className="mb-1">
-
-                {/* Parent row */}
+        <nav className="flex flex-1 flex-col overflow-y-auto px-4 pb-6">
+          <div className="space-y-3">
+            {NAV.map((item, index) => {
+              const expanded = !!expandedSections[item.label];
+              return (
                 <div
-                  className="flex items-center rounded-lg overflow-hidden transition-colors"
-                  style={{ background: isOpen ? "var(--color-surface)" : "transparent" }}
-                  onMouseEnter={(e) => { if (!isOpen) (e.currentTarget as HTMLDivElement).style.background = "var(--color-surface)"; }}
-                  onMouseLeave={(e) => { if (!isOpen) (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}
+                  key={item.label}
+                  className="pt-3"
+                  style={
+                    index === 0
+                      ? undefined
+                      : { borderTop: "1px solid color-mix(in oklab, var(--color-border) 15%, transparent)" }
+                  }
                 >
-                  {/* Nav link — explicit foreground color so it's always visible */}
-                  <Link
-                    to={item.to}
-                    onClick={onClose}
-                    className="flex-1 flex items-center gap-3 px-3 py-2.5 text-sm font-medium"
-                    style={{ color: "var(--color-foreground)", textDecoration: "none" }}
-                    activeProps={{
-                      style: { color: "var(--color-accent)", textDecoration: "none" },
-                    }}
-                  >
-                    <span
-                      className="h-8 w-8 rounded-lg grid place-items-center shrink-0"
-                      style={{ background: "var(--color-surface-2)", color: "var(--color-accent)" }}
-                    >
-                      <Icon className="h-4 w-4" />
-                    </span>
-                    {item.label}
-                  </Link>
-
-                  {/* Chevron to expand sub-links */}
                   <button
-                    onClick={() => setExpandedItem(isOpen ? null : item.label)}
-                    aria-label={`Toggle ${item.label}`}
-                    className="h-10 w-10 grid place-items-center shrink-0 transition-colors"
-                    style={{ color: "var(--color-muted-foreground)" }}
+                    type="button"
+                    onClick={() => toggleSection(item.label)}
+                    className={cn(
+                      "flex w-full items-center justify-between gap-3 border-l-4 pl-3 pr-2 text-left text-[1.1rem] font-medium leading-tight text-[var(--color-foreground)] transition-colors duration-200",
+                      expanded
+                        ? "border-l-[var(--color-accent)]"
+                        : "border-l-transparent hover:border-l-[var(--color-accent)] hover:text-[var(--color-accent)]",
+                    )}
                   >
+                    <span>{item.label}</span>
                     <ChevronDown
-                      className="h-4 w-4 transition-transform duration-200"
-                      style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
+                      className={cn(
+                        "h-4 w-4 text-[var(--color-foreground)] transition-transform duration-200",
+                        expanded && "rotate-180",
+                      )}
                     />
                   </button>
-                </div>
 
-                {/* Sub-links */}
-                {isOpen && (
-                  <div
-                    className="ml-11 mr-2 mt-1 mb-1 rounded-lg overflow-hidden"
-                    style={{ border: "1px solid var(--color-border)", background: "var(--color-surface)" }}
-                  >
-                    {item.items.map((s) => (
-                      <Link
-                        key={s.label}
-                        to={s.to}
-                        onClick={onClose}
-                        className="flex items-center justify-between px-3 py-2.5 text-sm transition-colors"
-                        style={{ color: "var(--color-foreground)", textDecoration: "none", display: "flex" }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-surface-2)")}
-                        onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                      >
-                        <span>{s.label}</span>
-                        {s.badge && <BadgePill kind={s.badge} />}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+                  {expanded && (
+                    <div className="space-y-1 px-3 pb-3 pt-2">
+                      {item.items.map((s) => (
+                        <Link
+                          key={s.label}
+                          to={s.to}
+                          hash={s.hash}
+                          onClick={onClose}
+                          className="block rounded-none px-0 py-2 text-[0.9rem] font-medium leading-snug text-[var(--color-muted-foreground)] transition-colors hover:text-[var(--color-foreground)]"
+                          style={{ paddingLeft: "1rem" }}
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span>{s.label}</span>
+                            {s.badge ? (
+                              <span className="inline-flex rounded-full bg-[var(--color-surface)] px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--color-muted-foreground)]">
+                                {s.badge}
+                              </span>
+                            ) : null}
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </nav>
 
-        {/* ── ③ SIGN IN — pinned at bottom ── */}
-        <div
-          className="px-3 py-4 shrink-0"
-          style={{ borderTop: "1px solid var(--color-border)" }}
-        >
+        <div className="mt-auto px-4 pb-6">
           {user ? (
-            <div className="flex flex-col gap-2">
-              {/* Logged in user info */}
-              <div
-                className="flex items-center gap-3 px-3 py-2 rounded-lg"
-                style={{ background: "var(--color-surface)" }}
-              >
-                <div
-                  className="h-8 w-8 rounded-full grid place-items-center text-xs font-semibold text-white shrink-0"
-                  style={{
-                    background: "linear-gradient(135deg, var(--color-accent), color-mix(in oklab, var(--color-accent) 50%, #000))",
-                  }}
-                >
-                  {(user.user_metadata?.first_name?.[0] ?? user.email?.[0] ?? "A").toUpperCase()}
-                </div>
-                <span className="text-xs truncate" style={{ color: "var(--color-muted-foreground)" }}>
-                  {user.email}
-                </span>
-              </div>
-              <button
-                onClick={() => { onClose(); onSignOut(); }}
-                className="w-full flex items-center justify-center gap-2 h-10 rounded-lg text-sm font-medium transition-colors"
-                style={{
-                  color: "var(--color-foreground)",
-                  border: "1px solid var(--color-border)",
-                  background: "transparent",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-surface)")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-              >
-                <LogOut className="h-4 w-4" />
-                Sign out
-              </button>
-            </div>
+            <button
+              onClick={() => {
+                onClose();
+                onSignOut();
+              }}
+              className="btn btn-ghost w-full"
+              style={{ width: "100%" }}
+            >
+              Sign out
+            </button>
           ) : (
-            <div className="flex flex-col gap-2">
+            <div className="space-y-3">
               <button
-                onClick={() => { onClose(); onSignIn(); }}
-                className="w-full h-10 rounded-lg text-sm font-medium transition-colors"
-                style={{
-                  color: "var(--color-foreground)",
-                  border: "1px solid var(--color-border)",
-                  background: "transparent",
+                onClick={() => {
+                  onClose();
+                  onSignIn();
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-surface)")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                className="btn btn-ghost w-full"
               >
                 Sign in
               </button>
               <button
-                onClick={() => { onClose(); onSignUp(); }}
-                className="w-full h-10 rounded-lg text-sm font-medium text-white transition-colors"
-                style={{ background: "var(--color-cta)" }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-cta-hover)")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "var(--color-cta)")}
+                onClick={() => {
+                  onClose();
+                  onSignUp();
+                }}
+                className="btn btn-cta w-full"
               >
                 Sign up
               </button>
@@ -390,65 +326,38 @@ function MobileDrawer({
     </div>
   );
 }
-// ─── END SIDEBAR ───────────────────────────────────────────────────────────────
 
 function UserMenu() {
   const { user, signOut } = useAuth();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    const h = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
+    const h = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
     document.addEventListener("mousedown", h);
     return () => document.removeEventListener("mousedown", h);
   }, []);
-
   if (!user) return null;
   const initials = (user.user_metadata?.first_name?.[0] ?? user.email?.[0] ?? "A").toUpperCase();
-
   return (
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
         className="h-9 w-9 rounded-full grid place-items-center text-sm font-medium text-white"
-        style={{
-          background: "linear-gradient(135deg, var(--color-accent), color-mix(in oklab, var(--color-accent) 50%, #000))",
-        }}
+        style={{ background: "linear-gradient(135deg, var(--color-accent), color-mix(in oklab, var(--color-accent) 50%, #000))" }}
         aria-label="Account menu"
       >
         {initials}
       </button>
       {open && (
-        <div
-          className="absolute right-0 top-full mt-2 min-w-[220px] py-2 z-50 rounded-lg"
-          style={{
-            background: "var(--color-popover)",
-            border: "1px solid var(--color-border)",
-            boxShadow: "0 10px 30px -10px rgba(0,0,0,0.45)",
-          }}
-        >
-          <div className="px-3 py-2 text-xs truncate" style={{ color: "var(--color-muted-foreground)" }}>
-            {user.email}
-          </div>
-          <div className="my-1 h-px" style={{ background: "var(--color-border)" }} />
-          <Link
-            to="/profile"
-            onClick={() => setOpen(false)}
-            className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm transition-colors"
-            style={{ color: "var(--color-foreground)" }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-surface-2)")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-          >
+        <div className="dropdown-panel animate-dropdown absolute right-0 top-full mt-2 min-w-[220px] py-2 z-50">
+          <div className="px-3 py-2 text-xs text-[var(--color-muted-foreground)] truncate">{user.email}</div>
+          <div className="my-1 h-px bg-[var(--color-border)]" />
+          <Link to="/profile" onClick={() => setOpen(false)} className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm hover:bg-[var(--color-surface-2)]">
             <UserIcon className="h-4 w-4" /> Profile
           </Link>
           <button
             onClick={async () => { await signOut(); setOpen(false); toast.success("Signed out"); }}
-            className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm transition-colors"
-            style={{ color: "var(--color-foreground)", background: "transparent" }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-surface-2)")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+            className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm hover:bg-[var(--color-surface-2)]"
           >
             <LogOut className="h-4 w-4" /> Sign out
           </button>
@@ -484,34 +393,25 @@ export function Header() {
 
   return (
     <header
-      className="sticky top-0 z-50 w-full backdrop-blur-md transition-colors"
-      style={{
-        background: scrolled
-          ? "color-mix(in oklab, var(--color-background) 85%, transparent)"
-          : "var(--color-background)",
-        borderBottom: "1px solid var(--color-border)",
-      }}
+      className={cn(
+        "sticky top-0 z-50 w-full backdrop-blur-md transition-colors",
+        scrolled ? "bg-[color-mix(in_oklab,var(--color-background)_85%,transparent)]" : "bg-[var(--color-background)]"
+      )}
+      style={{ borderBottom: "1px solid var(--color-border)" }}
     >
       <div className="mx-auto max-w-[1400px] px-4 lg:px-6 h-14 flex items-center gap-4">
-
-        {/* Hamburger — mobile/tablet only */}
         <button
           onClick={() => setDrawer(true)}
           aria-label="Open menu"
-          className="lg:hidden h-9 w-9 grid place-items-center rounded-lg transition-colors -ml-1"
-          style={{ color: "var(--color-foreground)" }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-surface)")}
-          onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+          className="lg:hidden h-9 w-9 grid place-items-center rounded-lg hover:bg-[var(--color-surface)] -ml-1"
         >
           <Menu className="h-5 w-5" />
         </button>
 
-        {/* Centered logo on mobile */}
         <div className="flex-1 flex justify-center lg:hidden">
           <Logo />
         </div>
 
-        {/* Desktop: logo + horizontal nav */}
         <div className="hidden lg:flex items-center gap-6">
           <Logo />
           <nav className="flex items-center gap-1">
@@ -521,76 +421,32 @@ export function Header() {
 
         <div className="hidden lg:block flex-1" />
 
-        {/* Desktop: search + auth + theme */}
         <div className="hidden lg:flex items-center gap-3">
-          <button
-            onClick={() => setSearchOpen(true)}
-            className="relative flex items-center h-9 rounded-lg border px-3 text-left transition-colors max-w-[340px]"
-            style={{
-              background: "var(--color-surface)",
-              borderColor: "var(--color-border)",
-              color: "var(--color-muted-foreground)",
-              minWidth: 220,
-            }}
-            aria-label="Open search"
-          >
-            <Search className="h-4 w-4 shrink-0" />
-            <span className="px-2 text-sm flex-1">Search ArtSpace</span>
-            <kbd
-              className="text-[10px] px-1.5 py-0.5 rounded"
-              style={{ border: "1px solid var(--color-border)" }}
-            >
-              ⌘K
-            </kbd>
-          </button>
-
+          <SearchTrigger onOpen={() => setSearchOpen(true)} />
           {user ? (
             <UserMenu />
           ) : (
             <>
-              <button
-                onClick={() => openAuth("signin")}
-                className="btn btn-ghost"
-                style={{ color: "var(--color-foreground)" }}
-              >
-                Sign in
-              </button>
-              <button onClick={() => openAuth("signup")} className="btn btn-cta">
-                Sign up
-              </button>
+              <button onClick={() => openAuth("signin")} className="btn btn-ghost">Sign in</button>
+              <button onClick={() => openAuth("signup")} className="btn btn-cta">Sign up</button>
             </>
           )}
           <ThemeToggle />
         </div>
 
-        {/* Mobile right: search icon + auth + theme */}
         <div className="flex items-center gap-2 lg:hidden">
-          <button
-            onClick={() => setSearchOpen(true)}
-            aria-label="Search"
-            className="h-9 w-9 grid place-items-center rounded-lg transition-colors"
-            style={{ color: "var(--color-foreground)" }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-surface)")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-          >
+          <button onClick={() => setSearchOpen(true)} aria-label="Search" className="h-9 w-9 grid place-items-center rounded-lg hover:bg-[var(--color-surface)]">
             <Search className="h-4 w-4" />
           </button>
           {user ? (
             <UserMenu />
           ) : (
-            <button
-              onClick={() => openAuth("signin")}
-              className="btn btn-ghost h-9 px-3 text-xs"
-              style={{ color: "var(--color-foreground)" }}
-            >
-              Sign in
-            </button>
+            <button onClick={() => openAuth("signin")} className="btn btn-ghost h-9 px-3 text-xs">Sign in</button>
           )}
           <ThemeToggle />
         </div>
       </div>
 
-      {/* Sidebar drawer */}
       <MobileDrawer
         open={drawer}
         onClose={() => setDrawer(false)}
