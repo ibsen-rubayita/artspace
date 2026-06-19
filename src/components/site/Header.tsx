@@ -58,7 +58,13 @@ function NavDropdown({ item }: { item: NavItem }) {
   const onLeave = () => { timer.current = window.setTimeout(() => setOpen(false), 120); };
   return (
     <div className="relative" onMouseEnter={onEnter} onMouseLeave={onLeave}>
-      <Link to={item.to} className="nav-link inline-flex items-center gap-1 text-sm px-2 py-2" data-open={open} activeProps={{ className: "nav-link inline-flex items-center gap-1 text-sm px-2 py-2 !text-[var(--color-accent)] !opacity-100" }}>
+     <Link
+        to={item.to}
+        className="nav-link inline-flex items-center gap-1 text-sm px-2 py-2"
+        data-open={open}
+        activeProps={{ className: "nav-link inline-flex items-center gap-1 text-sm px-2 py-2 !text-[var(--color-accent)] !opacity-100" }}
+      >
+        <item.icon className="h-3.5 w-3.5 shrink-0" style={{ color: "var(--color-accent)" }} />
         {item.label}
         <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", open && "rotate-180")} />
       </Link>
