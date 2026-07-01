@@ -90,22 +90,38 @@ function SearchTrigger({ onOpen, className }: { onOpen: () => void; className?: 
 function ThemeToggle() {
   const { theme, toggle } = useTheme();
   return (
-    <button onClick={toggle} aria-label="Toggle theme" className="h-10 w-10 grid place-items-center rounded-lg border hover:bg-[var(--color-surface)] hover:border-[var(--color-accent)] transition-all duration-200" style={{ borderColor: "var(--color-border)" }}>
+    <button onClick={toggle} aria-label="Toggle theme" className="theme-toggle-border h-10 w-10 grid place-items-center rounded-lg border hover:bg-[var(--color-surface)] hover:border-[var(--color-accent)] transition-all duration-200">
       {theme === "dark" ? <Sun className="h-[1.15rem] w-[1.15rem]" /> : <Moon className="h-[1.15rem] w-[1.15rem]" />}
     </button>
   );
 }
 
 function MobileDrawer({ open, onClose, onOpenSearch, onSignIn, onSignUp, user, onSignOut }: { open: boolean; onClose: () => void; onOpenSearch: () => void; onSignIn: () => void; onSignUp: () => void; user: ReturnType<typeof useAuth>["user"]; onSignOut: () => void; }) {
-  useEffect(() => { document.body.style.overflow = open ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [open]);
+  const [visible, setVisible] = useState(open);
+  const [closing, setClosing] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      setVisible(true);
+      setClosing(false);
+    } else if (visible) {
+      setClosing(true);
+      const t = window.setTimeout(() => { setVisible(false); setClosing(false); }, 300);
+      return () => window.clearTimeout(t);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  useEffect(() => { document.body.style.overflow = visible ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [visible]);
+
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
   const toggleSection = (label: string) => setExpandedSections((cur) => ({ ...cur, [label]: !cur[label] }));
-  if (!open) return null;
+  if (!visible) return null;
 
   return (
     <div className="fixed inset-0 z-[9999] lg:hidden">
-      <div className="absolute inset-0" style={{ backgroundColor: "rgba(0,0,0,0.5)" }} onClick={onClose} />
-      <aside className="fixed top-0 left-0 z-[9999] flex h-screen w-[82%] max-w-[320px] flex-col border-r border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)]">
+      <div className={cn("absolute inset-0", closing ? "animate-fade-out" : "animate-fade-in")} style={{ backgroundColor: "rgba(0,0,0,0.5)" }} onClick={onClose} />
+      <aside className={cn("fixed top-0 left-0 z-[9999] flex h-screen w-[82%] max-w-[320px] flex-col border-r border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)]", closing ? "animate-drawer-out" : "animate-drawer")}>
 
         {/* Header */}
         <div className="flex items-center justify-between gap-2 px-4 py-4 border-b border-[var(--color-border)]">
