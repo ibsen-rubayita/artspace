@@ -55,8 +55,8 @@
   --input: #21262d;
   --ring: #58a6ff;
 
-  --accent: #58a6ff;
-  --accent-foreground: #0d1117;
+  --accent: #238636;
+  --accent-foreground: #ffffff;
 
   --primary: #f0f6fc;
   --primary-foreground: #0d1117;
@@ -93,7 +93,7 @@
   --input: #d0d7de;
   --ring: #0969da;
 
-  --accent: #0969da;
+  --accent: #1f883d;
   --accent-foreground: #ffffff;
 
   --primary: #24292f;
