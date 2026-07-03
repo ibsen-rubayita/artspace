@@ -93,15 +93,29 @@ function HomePage() {
               <a href="/hire" className="btn btn-ghost px-5 py-2.5 text-sm">Hire a studio</a>
             </div>
 
-            <div className="mt-10 grid grid-cols-3 gap-6 max-w-md">
+            <div className="mt-10 grid grid-cols-3 gap-3 sm:gap-4 max-w-lg">
               {[
-                { k: "1.2K+", v: "Studios" },
-                { k: "48K", v: "Artists" },
-                { k: "6.3K", v: "Open jobs" },
-              ].map((s) => (
-                <div key={s.v}>
-                  <div className="text-2xl font-semibold">{s.k}</div>
-                  <div className="text-xs text-[var(--color-muted-foreground)] mt-1">{s.v}</div>
+                { k: "1.2K+", v: "Studios", Icon: Briefcase },
+                { k: "48K",   v: "Artists", Icon: Users },
+                { k: "6.3K",  v: "Open jobs", Icon: ImageIcon },
+              ].map(({ k, v, Icon }) => (
+                <div
+                  key={v}
+                  className="card-surface p-4 sm:p-5 flex flex-col items-start gap-3 transition-all duration-300 hover:border-[var(--color-accent)] hover:-translate-y-0.5"
+                >
+                  <span
+                    className="h-9 w-9 grid place-items-center rounded-lg"
+                    style={{
+                      background: "color-mix(in oklab, var(--color-accent) 15%, transparent)",
+                      color: "var(--color-accent)",
+                    }}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  <div className="text-2xl font-semibold leading-none">{k}</div>
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--color-muted-foreground)]">
+                    {v}
+                  </div>
                 </div>
               ))}
             </div>
