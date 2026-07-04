@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { ArrowRight, Sparkles, Palette, GraduationCap, Wrench, Newspaper, Network as NetworkIcon, Users, Image as ImageIcon, Briefcase, Eye, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, Sparkles, Palette, GraduationCap, Wrench, Newspaper, Network as NetworkIcon, Users, Image as ImageIcon, Briefcase } from "lucide-react";
 import { AuroraBackground } from "@/components/site/AuroraBackground";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
