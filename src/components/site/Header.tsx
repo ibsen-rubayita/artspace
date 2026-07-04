@@ -90,7 +90,7 @@ function SearchTrigger({ onOpen, className }: { onOpen: () => void; className?: 
 function ThemeToggle() {
   const { theme, toggle } = useTheme();
   return (
-    <button onClick={toggle} aria-label="Toggle theme" className="theme-toggle-border h-10 w-10 grid place-items-center rounded-lg border hover:bg-[var(--color-surface)] hover:border-[var(--color-accent)] transition-all duration-200">
+    <button onClick={toggle} aria-label="Toggle theme" className="h-10 w-10 grid place-items-center rounded-lg hover:bg-[var(--color-surface)] transition-all duration-200">
       {theme === "dark" ? <Sun className="h-[1.15rem] w-[1.15rem]" /> : <Moon className="h-[1.15rem] w-[1.15rem]" />}
     </button>
   );
