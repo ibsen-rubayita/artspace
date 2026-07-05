@@ -1,11 +1,13 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowRight, Sparkles, Palette, GraduationCap, Wrench, Newspaper, Network as NetworkIcon, Users, Image as ImageIcon, Briefcase } from "lucide-react";
+import { ArrowRight, Sparkles, Palette, GraduationCap, Wrench, Newspaper, Network as NetworkIcon, Users, Image as ImageIcon, Briefcase, Eye } from "lucide-react";
 import { AuroraBackground } from "@/components/site/AuroraBackground";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ScrollToTop } from "@/components/site/ScrollToTop";
 import { HorizontalRail, type RailItem } from "@/components/site/HorizontalRail";
 import { HeroMontage } from "@/components/site/HeroMontage";
+import { Lightbox } from "@/components/site/Lightbox";
 
 import artFigure from "@/assets/gallery-figure.jpg";
 import artCollage from "@/assets/gallery-collage.jpg";
@@ -150,44 +152,7 @@ function HomePage() {
             <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">Six ways to start using ArtSpace today.</p>
           </div>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[
-            { icon: Palette,       title: "Explore the Gallery", desc: "Hand-picked work from artists worldwide.", href: "/explore",  img: artFigure },
-            { icon: GraduationCap, title: "Learn your craft",    desc: "Online courses & in-person schools.",     href: "/learning", img: art11 },
-            { icon: Wrench,        title: "Shop the Tools",      desc: "Cameras, brushes, paints, tablets.",      href: "/tools",    img: art5 },
-            { icon: Palette,       title: "Arts Sales",          desc: "Original works, direct from the studio.", href: "/arts",     img: artMonolith },
-            { icon: Newspaper,     title: "Blogs & Magazine",    desc: "Stories, essays and studio visits.",      href: "/blogs",    img: artCollage },
-            { icon: NetworkIcon,   title: "Network",             desc: "Find a job · hire a studio.",             href: "/network",  img: artHero },
-          ].map((c, i) => (
-            <a
-              key={c.title}
-              href={c.href}
-              className="card-surface relative overflow-hidden group hover:border-[var(--color-accent)] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg animate-fade-up aspect-[5/4]"
-              style={{ animationDelay: `${0.05 + i * 0.06}s` }}
-            >
-              <img
-                src={c.img}
-                alt=""
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-
-              <div className="absolute top-3 right-3 h-9 w-9 rounded-lg grid place-items-center backdrop-blur-md border" style={{ background: "color-mix(in oklab, var(--color-background) 60%, transparent)", borderColor: "color-mix(in oklab, var(--color-foreground) 20%, transparent)" }}>
-                <c.icon className="h-4 w-4 text-[var(--color-accent)]" />
-              </div>
-
-              <div className="absolute bottom-3 left-3 right-12 text-white">
-                <h3 className="text-base font-semibold leading-tight drop-shadow-sm">{c.title}</h3>
-                <p className="mt-0.5 text-[11px] leading-snug text-white/75 line-clamp-1">{c.desc}</p>
-              </div>
-
-              <span className="absolute bottom-3 right-3 h-7 w-7 rounded-full grid place-items-center bg-[var(--color-accent)] text-white opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all">
-                <ArrowRight className="h-3.5 w-3.5" />
-              </span>
-            </a>
-          ))}
-        </div>
+        <HighlightsGrid />
       </section>
 
       <HorizontalRail title="Recent Artworks" subtitle="Freshly uploaded from artists across the community." items={RECENT_ARTWORKS} />
@@ -199,5 +164,106 @@ function HomePage() {
     </div>
   );
 }
+
+type Highlight = {
+  icon: typeof Palette;
+  title: string;
+  desc: string;
+  href: string;
+  images: string[];
+};
+
+const HIGHLIGHTS: Highlight[] = [
+  { icon: Palette,       title: "Explore the Gallery", desc: "Hand-picked work from artists worldwide.", href: "/explore",  images: [artFigure, artCollage, artBronze, artDoorway] },
+  { icon: GraduationCap, title: "Learn your craft",    desc: "Online courses & in-person schools.",     href: "/learning", images: [art11, art17, art14] },
+  { icon: Wrench,        title: "Shop the Tools",      desc: "Cameras, brushes, paints, tablets.",      href: "/tools",    images: [art5, art7] },
+  { icon: Palette,       title: "Arts Sales",          desc: "Original works, direct from the studio.", href: "/arts",     images: [artMonolith, artPlains, artQuietude, art2] },
+  { icon: Newspaper,     title: "Blogs & Magazine",    desc: "Stories, essays and studio visits.",      href: "/blogs",    images: [artCollage, art8, art1] },
+  { icon: NetworkIcon,   title: "Network",             desc: "Find a job · hire a studio.",             href: "/network",  images: [artHero, art7, art17, art14] },
+];
+
+function HighlightMosaic({ images }: { images: string[] }) {
+  const n = Math.min(images.length, 4);
+  if (n === 1) {
+    return <img src={images[0]} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />;
+  }
+  if (n === 2) {
+    return (
+      <div className="absolute inset-0 grid grid-cols-2 gap-0.5">
+        {images.slice(0, 2).map((src, i) => (
+          <img key={i} src={src} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+        ))}
+      </div>
+    );
+  }
+  if (n === 3) {
+    return (
+      <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-0.5">
+        <img src={images[0]} alt="" loading="lazy" className="row-span-2 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+        <img src={images[1]} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+        <img src={images[2]} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+      </div>
+    );
+  }
+  return (
+    <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-0.5">
+      {images.slice(0, 4).map((src, i) => (
+        <img key={i} src={src} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+      ))}
+    </div>
+  );
+}
+
+function HighlightsGrid() {
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+  return (
+    <>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {HIGHLIGHTS.map((c, i) => (
+          <a
+            key={c.title}
+            href={c.href}
+            className="card-surface relative overflow-hidden group hover:border-[var(--color-accent)] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg animate-fade-up aspect-[5/4]"
+            style={{ animationDelay: `${0.05 + i * 0.06}s` }}
+          >
+            <HighlightMosaic images={c.images} />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+
+            <button
+              type="button"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpenIdx(i); }}
+              className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium backdrop-blur-md border text-white hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] transition-colors"
+              style={{ background: "color-mix(in oklab, #000 45%, transparent)", borderColor: "color-mix(in oklab, #fff 25%, transparent)" }}
+              aria-label={`View ${c.title} images`}
+            >
+              <Eye className="h-3.5 w-3.5" /> View
+            </button>
+
+            <div className="absolute top-3 right-3 h-9 w-9 rounded-lg grid place-items-center backdrop-blur-md border" style={{ background: "color-mix(in oklab, var(--color-background) 60%, transparent)", borderColor: "color-mix(in oklab, var(--color-foreground) 20%, transparent)" }}>
+              <c.icon className="h-4 w-4 text-[var(--color-accent)]" />
+            </div>
+
+            <div className="absolute bottom-3 left-3 right-12 text-white">
+              <h3 className="text-base font-semibold leading-tight drop-shadow-sm">{c.title}</h3>
+              <p className="mt-0.5 text-[11px] leading-snug text-white/75 line-clamp-1">{c.desc}</p>
+            </div>
+
+            <span className="absolute bottom-3 right-3 h-7 w-7 rounded-full grid place-items-center bg-[var(--color-accent)] text-white opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all">
+              <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </a>
+        ))}
+      </div>
+      {openIdx !== null && (
+        <Lightbox
+          title={HIGHLIGHTS[openIdx].title}
+          images={HIGHLIGHTS[openIdx].images}
+          onClose={() => setOpenIdx(null)}
+        />
+      )}
+    </>
+  );
+}
+
 
 

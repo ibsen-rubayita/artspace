@@ -9,10 +9,9 @@ export function HeroMontage({ slides, interval = 3500 }: { slides: Slide[]; inte
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (open) return;
     const id = window.setInterval(() => setI((v) => (v + 1) % slides.length), interval);
     return () => window.clearInterval(id);
-  }, [slides.length, interval, open]);
+  }, [slides.length, interval]);
 
   return (
     <div className="relative rounded-xl overflow-hidden border h-[420px] lg:h-[520px]" style={{ borderColor: "var(--color-border)" }}>
@@ -68,6 +67,7 @@ export function HeroMontage({ slides, interval = 3500 }: { slides: Slide[]; inte
         <Lightbox
           title="Featured · Highlights from the community"
           images={slides.map((s) => s.src)}
+          startIndex={i}
           onClose={() => setOpen(false)}
         />
       )}
