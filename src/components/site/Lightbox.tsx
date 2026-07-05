@@ -5,12 +5,14 @@ export function Lightbox({
   title,
   images,
   onClose,
+  startIndex = 0,
 }: {
   title?: string;
   images: string[];
   onClose: () => void;
+  startIndex?: number;
 }) {
-  const [idx, setIdx] = useState(0);
+  const [idx, setIdx] = useState(startIndex);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
