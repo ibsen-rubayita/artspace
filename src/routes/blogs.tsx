@@ -218,6 +218,7 @@ function PostDialog({ post, onClose }: { post: Post; onClose: () => void }) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [draft, setDraft] = useState("");
   const [posting, setPosting] = useState(false);
+  const [imgOpen, setImgOpen] = useState(false);
 
   useEffect(() => {
     if (!user) { setLikeCount(0); setComments([]); setLiked(false); return; }
