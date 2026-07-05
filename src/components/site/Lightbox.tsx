@@ -31,7 +31,15 @@ export function Lightbox({
 
   return (
     <div
-      className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 sm:p-8 animate-fade-in"
+      className="fixed inset-0 z-[100] backdrop-blur-xl flex items-center justify-center p-4 sm:p-8 animate-fade-in"
+      style={{
+        background: `
+          radial-gradient(ellipse 80% 60% at 50% 40%, rgba(13,17,23,0.78) 0%, rgba(13,17,23,0.94) 55%, rgba(13,17,23,0.98) 100%),
+          radial-gradient(ellipse 140% 140% at 85% 15%, color-mix(in oklab, var(--color-accent) 12%, transparent) 0%, transparent 55%),
+          radial-gradient(ellipse 140% 140% at 15% 85%, color-mix(in oklab, var(--color-accent) 10%, transparent) 0%, transparent 55%),
+          #000
+        `,
+      }}
       onClick={onClose}
       role="dialog"
       aria-modal="true"
