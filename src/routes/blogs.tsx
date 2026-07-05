@@ -300,10 +300,15 @@ function PostDialog({ post, onClose }: { post: Post; onClose: () => void }) {
         className="relative z-10 w-full sm:max-w-2xl sm:rounded-xl border overflow-hidden animate-fade-up flex flex-col max-h-full sm:max-h-[90vh]"
         style={{ borderColor: "var(--color-border)", background: "var(--color-background)" }}
       >
-        <div className="relative">
-          <img src={post.img} alt={post.title} className="w-full aspect-[16/9] object-cover" />
+        <div className="relative group cursor-pointer" onClick={() => setImgOpen(true)}>
+          <img src={post.img} alt={post.title} className="w-full aspect-[16/9] object-cover transition-transform duration-500 group-hover:scale-[1.02]" />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full bg-white/15 backdrop-blur-sm p-2.5 text-white">
+              <Expand className="h-5 w-5" />
+            </div>
+          </div>
           <button
-            onClick={onClose}
+            onClick={(e) => { e.stopPropagation(); onClose(); }}
             aria-label="Close"
             className="absolute top-3 right-3 h-9 w-9 grid place-items-center rounded-lg bg-black/50 text-white hover:bg-black/70"
           >
@@ -311,6 +316,7 @@ function PostDialog({ post, onClose }: { post: Post; onClose: () => void }) {
           </button>
           <div className="absolute top-3 left-3"><TagPill tag={post.tag} /></div>
         </div>
+        {imgOpen && <Lightbox images={[post.img]} title={post.title} onClose={() => setImgOpen(false)} />}
 
         <div className="p-5 sm:p-6 overflow-y-auto">
           <h2 className="text-xl sm:text-2xl font-semibold leading-tight">{post.title}</h2>
