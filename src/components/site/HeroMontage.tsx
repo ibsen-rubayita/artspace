@@ -67,6 +67,7 @@ export function HeroMontage({ slides, interval = 3500 }: { slides: Slide[]; inte
         <Lightbox
           title="Featured · Highlights from the community"
           images={slides.map((s) => s.src)}
+          startIndex={i}
           onClose={() => setOpen(false)}
         />
       )}
