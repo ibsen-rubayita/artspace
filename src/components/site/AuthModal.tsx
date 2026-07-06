@@ -191,6 +191,46 @@ export function AuthModal() {
           </form>
         ) : (
           <form onSubmit={handleSignUp} className="mt-5 space-y-4">
+            <div>
+              <span className="block text-[11px] uppercase tracking-wider text-[var(--color-muted-foreground)] mb-1.5">
+                I'm signing up as a…
+              </span>
+              <div className="grid grid-cols-2 gap-2">
+                {([
+                  { key: "customer", label: "Customer", desc: "Browse & buy art", Icon: ShoppingBag },
+                  { key: "artist", label: "Artist", desc: "Sell & showcase work", Icon: Palette },
+                ] as const).map(({ key, label, desc, Icon }) => {
+                  const selected = role === key;
+                  return (
+                    <button
+                      type="button"
+                      key={key}
+                      onClick={() => setRole(key)}
+                      aria-pressed={selected}
+                      className={cn(
+                        "flex items-start gap-2.5 rounded-lg border p-3 text-left transition-all",
+                        selected
+                          ? "border-[var(--color-accent)] bg-[color-mix(in_oklab,var(--color-accent)_12%,transparent)] ring-1 ring-[var(--color-accent)]"
+                          : "hover:bg-[var(--color-surface-2)]"
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          "mt-0.5 grid h-7 w-7 place-items-center rounded-md",
+                          selected ? "bg-[var(--color-accent)] text-white" : "bg-[var(--color-surface-2)]"
+                        )}
+                      >
+                        <Icon className="h-4 w-4" />
+                      </span>
+                      <span className="flex flex-col">
+                        <span className="text-sm font-medium leading-tight">{label}</span>
+                        <span className="text-[11px] text-[var(--color-muted-foreground)] leading-tight mt-0.5">{desc}</span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
             <div className="grid grid-cols-2 gap-3">
               <Field label="First name">
                 <input required value={firstName} onChange={(e) => setFirstName(e.target.value)} className={inputCls} autoComplete="given-name" />
