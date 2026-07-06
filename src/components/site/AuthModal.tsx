@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { X, Eye, EyeOff, Sparkles, Check } from "lucide-react";
+import { X, Eye, EyeOff, Sparkles, Check, ShoppingBag, Palette } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
