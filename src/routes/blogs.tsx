@@ -377,8 +377,8 @@ function PostDialog({ post, onClose }: { post: Post; onClose: () => void }) {
           </div>
 
 
-          <div className="mt-6 pt-5 border-t" style={{ borderColor: "var(--color-border)" }}>
-            <h3 className="text-sm font-semibold mb-3">Comments</h3>
+          <div className="mt-8 pt-6 border-t" style={{ borderColor: "var(--color-border)" }}>
+            <h3 className="text-sm font-semibold mb-4 uppercase tracking-wider text-[var(--color-muted-foreground)]">Comments</h3>
             {!user ? (
               <div className="rounded-lg border p-5 text-center" style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}>
                 <p className="text-sm text-[var(--color-muted-foreground)] mb-3">
