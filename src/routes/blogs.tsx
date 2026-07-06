@@ -293,16 +293,26 @@ function PostDialog({ post, onClose }: { post: Post; onClose: () => void }) {
     if (error) { setComments(prev); toast.error(error.message); }
   };
 
+  const initials = post.artist
+    .split(/\s+/)
+    .map((s) => s[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+  const paragraphs = post.body.split(/\n\n+/);
+
   return (
     <div className="fixed inset-0 z-[70] flex items-stretch sm:items-center justify-center">
       <div className="absolute inset-0 bg-black/70 animate-fade-in" onClick={onClose} />
       <div
-        className="relative z-10 w-full sm:max-w-2xl sm:rounded-xl border overflow-hidden animate-fade-up flex flex-col max-h-full sm:max-h-[90vh]"
+        className="relative z-10 w-full sm:max-w-3xl sm:rounded-xl border overflow-hidden animate-fade-up flex flex-col max-h-full sm:max-h-[92vh]"
         style={{ borderColor: "var(--color-border)", background: "var(--color-background)" }}
       >
         <div className="relative group cursor-pointer" onClick={() => setImgOpen(true)}>
-          <img src={post.img} alt={post.title} className="w-full aspect-[16/9] object-cover transition-transform duration-500 group-hover:scale-[1.02]" />
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
+          <img src={post.img} alt={post.title} className="w-full aspect-[21/9] max-h-[280px] object-cover transition-transform duration-500 group-hover:scale-[1.02]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
             <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full bg-white/15 backdrop-blur-sm p-2.5 text-white">
               <Expand className="h-5 w-5" />
             </div>
@@ -318,19 +328,32 @@ function PostDialog({ post, onClose }: { post: Post; onClose: () => void }) {
         </div>
         {imgOpen && <Lightbox images={[post.img]} title={post.title} onClose={() => setImgOpen(false)} />}
 
-        <div className="p-5 sm:p-6 overflow-y-auto">
-          <h2 className="text-xl sm:text-2xl font-semibold leading-tight">{post.title}</h2>
-          <div className="mt-2 flex items-center gap-3 text-sm text-[var(--color-muted-foreground)]">
-            <span className="font-medium text-[var(--color-foreground)]">{post.artist}</span>
-            <span>·</span>
-            <span>{post.artistHandle}</span>
-            <span>·</span>
-            <span>{post.readTime}</span>
+        <div className="p-6 sm:p-8 overflow-y-auto">
+          <h2 className="text-2xl sm:text-[28px] font-semibold leading-tight tracking-tight">{post.title}</h2>
+
+          <div className="mt-4 flex items-center gap-3">
+            <div
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-sm font-semibold text-white"
+              style={{ background: "color-mix(in oklab, var(--color-accent) 85%, black)" }}
+              aria-hidden
+            >
+              {initials || "·"}
+            </div>
+            <div className="flex flex-col leading-tight">
+              <span className="text-sm font-medium text-[var(--color-foreground)]">{post.artist}</span>
+              <span className="text-xs text-[var(--color-muted-foreground)]">
+                {post.artistHandle} · {post.readTime}
+              </span>
+            </div>
           </div>
 
-          <p className="mt-4 text-[15px] leading-relaxed">{post.body}</p>
+          <div className="mt-6 space-y-5 text-[17px] leading-[1.75] text-[var(--color-foreground)]/90">
+            {paragraphs.map((p, idx) => (
+              <p key={idx}>{p}</p>
+            ))}
+          </div>
 
-          <div className="mt-6 flex flex-wrap items-center gap-2">
+          <div className="mt-8 pt-6 border-t flex flex-wrap items-center gap-2" style={{ borderColor: "var(--color-border)" }}>
             <button
               onClick={() => { if (!user) { openAuth("signin"); return; } onFollow(); }}
               className={following ? "btn btn-ghost inline-flex items-center gap-2" : "btn btn-cta inline-flex items-center gap-2"}
@@ -352,6 +375,7 @@ function PostDialog({ post, onClose }: { post: Post; onClose: () => void }) {
               </>
             )}
           </div>
+
 
           <div className="mt-6 pt-5 border-t" style={{ borderColor: "var(--color-border)" }}>
             <h3 className="text-sm font-semibold mb-3">Comments</h3>
