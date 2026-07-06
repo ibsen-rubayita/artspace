@@ -83,6 +83,7 @@ export function AuthModal() {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!role) return toast.error("Please select whether you're signing up as a Customer or Artist");
     if (password !== password2) return toast.error("Passwords do not match");
     if (!agree) return toast.error("Please agree to the Terms");
     if (strength.score < 3) return toast.error("Please choose a stronger password");
@@ -92,7 +93,7 @@ export function AuthModal() {
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/`,
-        data: { first_name: firstName, last_name: lastName },
+        data: { first_name: firstName, last_name: lastName, role },
       },
     });
     if (!error) {
