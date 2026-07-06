@@ -52,6 +52,7 @@ export function AuthModal() {
   const [lastName, setLastName] = useState("");
   const [password2, setPassword2] = useState("");
   const [agree, setAgree] = useState(false);
+  const [role, setRole] = useState<"customer" | "artist" | null>(null);
 
   useEffect(() => {
     if (authState.open) {
