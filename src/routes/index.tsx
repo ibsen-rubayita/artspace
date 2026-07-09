@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRight, Sparkles, Palette, GraduationCap, Wrench, Newspaper, Network as NetworkIcon, Users, Image as ImageIcon, Briefcase, Eye } from "lucide-react";
-import { ArtworkGridMotion } from "@/components/site/ArtworkGridMotion";
+
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ScrollToTop } from "@/components/site/ScrollToTop";
@@ -70,7 +70,6 @@ function HomePage() {
 
       {/* HERO */}
       <section className="relative overflow-hidden">
-        <ArtworkGridMotion />
         <div className="relative mx-auto max-w-[1400px] px-4 lg:px-6 pt-10 lg:pt-16 pb-16 lg:pb-24 grid lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-6 animate-fade-up">
             <div className="inline-flex items-center gap-2 text-xs px-3 py-1 rounded-full border" style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}>

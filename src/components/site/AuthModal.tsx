@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { ArtworkGridMotion } from "@/components/site/ArtworkGridMotion";
 
 type Mode = "signin" | "signup";
 
@@ -124,7 +125,10 @@ export function AuthModal() {
 
   return (
     <div className="fixed inset-0 z-[100] grid place-items-center p-4 animate-fade-in">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={closeAuth} />
+      <div className="absolute inset-0 overflow-hidden" onClick={closeAuth}>
+        <ArtworkGridMotion />
+        <div className="absolute inset-0 bg-black/75 backdrop-blur-md" />
+      </div>
       <div
         className="relative w-full max-w-md card-surface p-6 sm:p-7 shadow-2xl"
         style={{ borderRadius: 14 }}
