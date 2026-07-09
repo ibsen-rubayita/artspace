@@ -98,6 +98,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
+        <SiteParticles />
         <Outlet />
         <AuthModal />
         <Toaster position="top-center" theme="dark" richColors />
