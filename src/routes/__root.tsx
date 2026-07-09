@@ -10,6 +10,7 @@ import {
 import { Toaster } from "sonner";
 import { AuthProvider } from "@/hooks/use-auth";
 import { AuthModal } from "@/components/site/AuthModal";
+import { SiteParticles } from "@/components/site/SiteParticles";
 
 import appCss from "../styles.css?url";
 
